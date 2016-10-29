@@ -1,2 +1,0 @@
-<?php
-echo 'error test'
