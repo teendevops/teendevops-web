@@ -1,3 +1,6 @@
+# Status
+[![Build Status](https://travis-ci.com/Arinerron/codeday-team.svg?token=xRJQhWcuhJai95gtzHzi&branch=master)](https://travis-ci.com/Arinerron/codeday-team)
+
 # About
 The reason why this is called "codeday-team" is because I don't have a name for it yet, and I was developing it for/at CodeDay.  I'll rename when we find a name for it.
 
