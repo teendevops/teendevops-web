@@ -1,5 +1,9 @@
 <?php
-include "database.php";
+include "config.php";
+
+function getConnection() {
+    return new mysqli(HOST, USER, PASSWORD, DATABASE);
+}
 
 sec_session_start();
 
