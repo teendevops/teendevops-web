@@ -26,7 +26,7 @@
                     <ul class="nav navbar-nav navbar-left">
                         <?php
                             
-                            header("X-Hello-Hacker: Hello! I would love to have a chat with you sometime. You can shoot me an email arinesau@gmail.com. :)"); // if something goes wrong, blame it on Arav :P
+                            header(base64_decode("WC1IZWxsby1IYWNrZXI6IEhlbGxvISBJIHdvdWxkIGxvdmUgdG8gaGF2ZSBhIGNoYXQgd2l0aCB5b3Ugc29tZXRpbWUuIFlvdSBjYW4gc2hvb3QgbWUgYW4gZW1haWwgYXJpbmVzYXVAZ21haWwuY29tLiA6KQ==")); // if something goes wrong, blame it on Arav :P
                             header("X-Easter-Egg: You found an easter egg! id=e4st3r_egg_5");
                             
                             if(isSignedIn()) {
