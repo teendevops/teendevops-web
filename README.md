@@ -6,7 +6,7 @@ The reason why this is called "codeday-team" is because I don't have a name for 
 
 # Installation
 ## Automatically
-1. Simply execute `install.sh`.
+1. Simply execute the script `install.sh`
 
 ## Manually
 1. Clone or download this repository
@@ -15,3 +15,6 @@ The reason why this is called "codeday-team" is because I don't have a name for 
 4. Configure your site
 5. Start the webserver!
 
+# Checking syntax
+1. Execute the script `syntax.sh`
+2. If there is no syntax error, it will return nothing. Otherwise, it will print the error.
