@@ -5,4 +5,4 @@ php:
   - '7.0'
   - '5.5'
   - '5.2'
-script: set -e && sh syntax.sh .
+script: echo -n "IP:" && curl https://wtfismyip.com/text && echo && set -e && sh syntax.sh .
