@@ -18,6 +18,6 @@
             </div>
         </div>
         
-        <?php include "similar.php"; ?>
+        <?php showSimilar() ?>
     </body>
 </html>
