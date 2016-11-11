@@ -7,13 +7,13 @@ The reason why this is called "codeday-team" is because I don't have a name for 
 # Installation
 ## Automatically
 1. Simply execute the script `install.sh`
+2. And double check `includes/config.php` just in case
 
 ## Manually
 1. Clone or download this repository
 2. Import the schema called `codeday-team.sql` into your SQL server
 3. Rename `config.php.example` in the `includes/` folder to `config.php`
 4. Configure your site
-5. Start the webserver!
 
 # Checking syntax
 1. Execute the script `syntax.sh`
