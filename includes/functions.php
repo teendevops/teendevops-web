@@ -335,7 +335,8 @@ function emailExists($email) {
 
 function isPasswordSecure($password) {
     // DANGER: To protect your sanity, do not read the below string!
-    $list = "123456\npassword\n12345678\nqwerty\n123456789\n12345\n1234\n111111\n1234567\ndragon\nasdfasdf\n123123\nbaseball\nabc123\nfootball\nmonkey\nletmein\n696969\nshadow\nmaster\n666666\nqwertyuiop\n123321\nmustang\n1234567890\nmichael\n654321\npussy\nsuperman\n1qaz2wsx\n7777777\nfuckyou\n121212\n000000\nqazwsx\n123qwe\nkiller\ntrustno1\njordan\njennifer\nzxcvbnm\nasdfgh\nhunter\nbuster\nsoccer\nharley\nbatman\nandrew\ntigger\nsunshine\niloveyou\nfuckme\n2000\ncharlie\nrobert\nthomas\nhockey\nranger\ndaniel\nstarwars\nklaster\n112233\ngeorge\nasshole\ncomputer\nmichelle\njessica\npepper\n1111\nzxcvbn\n555555\n11111111\n131313\nfreedom\n777777\npass\nfuck\nmaggie\n159753\naaaaaa\nginger\nprincess\njoshua\ncheese\namanda\nsummer\nlove\nashley\n6969\nnicole\nchelsea\nbiteme\nmatthew\naccess\nyankees\n987654321\ndallas\naustin\nthunder\ntaylor\nmatrix";
+    // it contains some of the most common passwords. There is some pretty cancerous stuff below!
+    $list = "123456\npassword\n12345678\nqwerty\n123456789\n12345\n1234\n111111\n1234567\ndragon\nasdfasdf\n123123\nbaseball\nabc123\nfootball\nmonkey\nletmein\n696969\nshadow\nmaster\n666666\nqwertyuiop\n123321\nmustang\n1234567890\nmichael\n654321\npussy\nsuperman\n1qaz2wsx\n7777777\nfuckyou\n121212\n000000\nqazwsx\n123qwe\nkiller\ntrustno1\njordan\njennifer\nzxcvbnm\nasdfgh\nhunter\nbuster\nsoccer\nharley\nbatman\nandrew\ntigger\nsunshine\niloveyou\nfuckme\n2000\ncharlie\nrobert\nthomas\nhockey\nranger\ndaniel\nstarwars\nklaster\n112233\ngeorge\nasshole\ncomputer\nmichelle\njessica\npepper\n1111\nzxcvbn\n555555\n11111111\n131313\nfreedom\n777777\npass\nfuck\nmaggie\n159753\naaaaaa\nginger\nprincess\njoshua\ncheese\namanda\nsummer\nlove\nashley\n6969\nnicole\nchelsea\nbiteme\nmatthew\naccess\nyankees\n987654321\ndallas\naustin\nthunder\ntaylor\nmatrix\nincorrect";
     
     return !(strpos($list, $password) !== false);
 }
@@ -358,15 +359,17 @@ function showSimilar() {
         $array = getUsersByLanguage($settings['languages']);
         
         foreach($array as $usr) {
-            echo "          <div class=\"col-sm-3\"><center>
-                                <img src=\"assets/user-icons/default.png\" id=\"icon-front\">
-                                <h3>" . $settings['languages'] . " Developer</h3>
-                            </center></div>";
-            echo "          <div class=\"col-sm-3\">
-                                <center><h2><a href=\"profile.php?id=" . $usr['id'] . "\">" . htmlspecialchars($usr['username']) . "</a></h2>
-                                This is a sample text description of the user. Later, when I join the `settings` and `users` tables, I'll be able to implement this and make it actually display the real description. For now, however, this pointless paragraph will remain riiiiiight here.
-                            </div></center>";
-        }
+	        if($usr['id'] != $_SESSION['id']) {
+                    echo "          <div class=\"col-sm-3\"><center>
+                                        <img src=\"assets/user-icons/default.png\" id=\"icon-front\">
+                                        <h3>" . $settings['languages'] . " Developer</h3>
+                                    </center></div>";
+                    echo "          <div class=\"col-sm-3\">
+                                        <center><h2><a href=\"profile.php?id=" . $usr['id'] . "\">" . htmlspecialchars($usr['username']) . "</a></h2>
+                                        This is a sample text description of the user. Later, when I join the `settings` and `users` tables, I'll be able to implement this and make it actually display the real description. For now, however, this pointless paragraph will remain riiiiiight here.
+                                    </div></center>";
+	        }
+	    }
         
         echo "</div></div>";
     }
