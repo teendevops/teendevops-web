@@ -1,7 +1,7 @@
 <html>
     <?php include "header.php"?>
     
-    <body> 
+    <body>
         <div class="container-full cool-red">
             <div class="row cool-red">
                 <div class="col-lg-12 text-center v-center">
