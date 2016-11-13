@@ -130,7 +130,7 @@ function login($username_or_email, $password_real) {
                 $_SESSION['language'] = $languages;
                 $_SESSION['html_language'] = htmlspecialchars($languages);
                 $_SESSION['location'] = $location;
-                $_SESSION['html_location'] = $location;
+                $_SESSION['html_location'] = htmlspecialchars($location);
                 
                 return 0;
             } else {
@@ -148,7 +148,7 @@ function loginAttempt($mysqli, $id, $success) {
     $stmt = $mysqli->prepare("INSERT INTO `login_attempts` (`id`, `time`, `ip`, `insecure_ip`, `success`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)") or die("Error: Failed to prepare statement @ login_attempts");
     $stmt->bind_param('isss', $id, $_SERVER['REMOTE_ADDR'], $forwarded, $sc) or die("Error: Failed to login bind param.");
     
-    $stmt->execute() or die("Error: Failed to execute query. q=1 ");
+    $stmt->execute() or die("Error: Failed to execute query");
 }
 
 function isBruteForcing($id, $tops) {
