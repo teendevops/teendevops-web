@@ -105,7 +105,7 @@ function login($username_or_email, $password_real) {
     $stmt->store_result();
     $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location) or die("Error: Failed to bind params first time");
     while ($stmt->fetch() ) {
-        if(isBruteForcing($id, 10)) {
+        if(isBruteForcing($id, MAX_LOGIN_ATTEMPTS)) {
             return 4;
         } else if($banned == 'true') {
             return 2;
