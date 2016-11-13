@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 29, 2016 at 12:36 AM
--- Server version: 5.5.52-0ubuntu0.14.04.1
+-- Generation Time: Nov 12, 2016 at 04:33 PM
+-- Server version: 5.5.53-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -19,8 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `codeday-team`
 --
-
-CREATE DATABASE `codeday-team`;
+CREATE DATABASE IF NOT EXISTS `codeday-team` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `codeday-team`;
 
 -- --------------------------------------------------------
@@ -60,24 +59,11 @@ CREATE TABLE `chat` (
 
 CREATE TABLE `login_attempts` (
   `id` int(11) NOT NULL COMMENT 'User ID',
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Time of Login Attempt',
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT AS `Time of Login Attempt`,
   `ip` varchar(50) NOT NULL COMMENT 'IP Address of Request',
   `insecure_ip` varchar(50) NOT NULL COMMENT 'Spoofed IP Address of Request',
   `success` varchar(5) NOT NULL COMMENT 'Login Success?'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table contains all of the login attempts.';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `settings`
---
-
-CREATE TABLE `settings` (
-  `id` int(11) NOT NULL COMMENT 'User ID',
-  `description` varchar(500) NOT NULL COMMENT 'User Description',
-  `languages` varchar(100) NOT NULL COMMENT 'Known Languages',
-  `location` varchar(100) NOT NULL COMMENT 'User Location'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table contains all of the users'' settings.';
 
 -- --------------------------------------------------------
 
@@ -91,7 +77,10 @@ CREATE TABLE `users` (
   `password` varchar(256) NOT NULL COMMENT 'Hashed Password',
   `name` int(25) NOT NULL COMMENT 'Username (ignore this column)',
   `email` varchar(255) NOT NULL COMMENT 'Email Address',
-  `banned` varchar(5) NOT NULL COMMENT 'Banned?'
+  `banned` varchar(5) NOT NULL COMMENT 'Banned?',
+  `description` varchar(500) NOT NULL COMMENT 'User Description',
+  `languages` varchar(100) NOT NULL COMMENT 'Known Languages',
+  `location` varchar(100) NOT NULL COMMENT 'User Location'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table contains all of the core user data.';
 
 --
@@ -108,12 +97,6 @@ ALTER TABLE `channels`
 -- Indexes for table `chat`
 --
 ALTER TABLE `chat`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `settings`
---
-ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -137,15 +120,10 @@ ALTER TABLE `channels`
 ALTER TABLE `chat`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `settings`
---
-ALTER TABLE `settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'User ID', AUTO_INCREMENT=2;
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'User ID', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'User ID', AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
