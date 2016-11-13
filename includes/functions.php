@@ -32,7 +32,7 @@ function sec_session_start() {
 function register($username, $email, $password) {
     $mysqli = getConnection();
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`) VALUES (NULL, ?, ?, ?, ?, 'false')");
+    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null')");
     $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
     $stmt->execute();
         
@@ -40,12 +40,8 @@ function register($username, $email, $password) {
     $stmt->bind_param('ss', $username, $email);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n); // is this even needed?
     $stmt->fetch();
-    
-    $stmt = $mysqli->prepare("INSERT INTO `settings` (`id`, `description`, `languages`, `location`) VALUES (?, 'Write something about yourself here...', 'None', 'cat location > /dev/null')");
-    $stmt->bind_param('i', $id_n);
-    $stmt->execute(); // insert row into settings
 }
 
 function getUser($id) {
@@ -55,10 +51,10 @@ function getUser($id) {
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n);
     $stmt->fetch();
     
-    $user = getSettings($id);
+    $user = array();
     $user['id'] = "-1";
     $user['username'] = "404page";
     $user['email'] = "404@page.com";
@@ -70,40 +66,32 @@ function getUser($id) {
     $user['email'] = $email_n;
     $user['name'] = $name_n;
     $user['banned'] = $banned_n;
+    $user['description'] = $description_n;
+    $user['languages'] = $languages_n;
+    $user['location'] = $location_n;
     
     return $user;
 }
 
-function getSettings($id_real) {
-    $arr = array();
-    $mysqli = getConnection();
-    $stmt = $mysqli->prepare("SELECT * FROM `settings` WHERE `id`=?");
-    $stmt->bind_param('i', $id_real);
-    $stmt->execute();
-    
-    $stmt->store_result();
-    $stmt->bind_result($id, $description, $languages, $location);
-    while ($stmt->fetch()) {
-        $arr['id'] = $id;
-        $arr['description'] = $description;
-        $arr['languages'] = $languages;
-        $arr['location'] = $location;
-        
-        return $arr;
-    }
-    
-    $arr['id'] = "-1";
-    $arr['description'] = "A nonexistant user you wish existed";
-    $arr['languages'] = "Wishful";
-    $arr['location'] = "Internet";
-    
-    return $arr;
+function getSettings($id_real) { // this function is obselete.
+    return getUser($id_real);
 }
 
 function setSettings($id, $description, $languages, $location) {
     $mysqli = getConnection();
     
-    $stmt = $mysqli->prepare("UPDATE `settings` SET `description`=?, `languages`=?, `location`=? WHERE `id`=?");
+    if(isSignedIn() && $id == $_SESSION['id']) {
+        $_SESSION['description'] = $description;
+        $_SESSION['html_description'] = htmlspecialchars($description);
+        $_SESSION['languages'] = $languages;
+        $_SESSION['html_languages'] = htmlspecialchars($languages);
+        $_SESSION['language'] = $languages;
+        $_SESSION['html_language'] = htmlspecialchars($languages);
+        $_SESSION['location'] = $location;
+        $_SESSION['html_location'] = $location;
+    }
+    
+    $stmt = $mysqli->prepare("UPDATE `users` SET `description`=?, `languages`=?, `location`=? WHERE `id`=?");
     $stmt->bind_param('sssi', $description, $languages, $location, $id);
     $stmt->execute() or die("Error: Failed to save settings.");
 }
@@ -115,7 +103,7 @@ function login($username_or_email, $password_real) {
     $stmt->execute() or die("Error: Failed to select user");
     
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $email, $name, $banned) or die("Error: Failed to bind params first time");
+    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location) or die("Error: Failed to bind params first time");
     while ($stmt->fetch() ) {
         if(isBruteForcing($id, 10)) {
             return 4;
@@ -126,7 +114,7 @@ function login($username_or_email, $password_real) {
             loginAttempt($mysqli, $id, $success);
             
             if($success) {
-                generateCSRFToken();// or die("Error: rip csrf token 2016");
+                generateCSRFToken();
                 $_SESSION['id'] = $id;
                 $_SESSION['username'] = $username;
                 $_SESSION['html_username'] = htmlspecialchars($username);
@@ -135,6 +123,14 @@ function login($username_or_email, $password_real) {
                 $_SESSION['banned'] = $banned;
                 $_SESSION['name'] = $name;
                 $_SESSION['signed_in'] = true;
+                $_SESSION['description'] = $description;
+                $_SESSION['html_description'] = htmlspecialchars($description);
+                $_SESSION['languages'] = $languages;
+                $_SESSION['html_languages'] = htmlspecialchars($languages);
+                $_SESSION['language'] = $languages;
+                $_SESSION['html_language'] = htmlspecialchars($languages);
+                $_SESSION['location'] = $location;
+                $_SESSION['html_location'] = $location;
                 
                 return 0;
             } else {
@@ -213,49 +209,31 @@ function getChannels() {
             "title"=>$title,
             "description"=>$description,
             "creator"=>$creator,
-        );;
+        );
     }
     
     return $arr;
 }
 
-function getUsersByLanguage($languages) {
-    $data = array();
+function getUsersByLanguage($language) {
     $arr = array();
     
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
-	$stmt = $mysqli->prepare("SELECT `id` FROM `settings` WHERE `languages`=? LIMIT 20");
-	$stmt->bind_param("s", $languages);
+    
+    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `languages`=? AND `banned`='false' LIMIT 20") or die("Error: Failed to prepare query.");
+	$stmt->bind_param("s", $language);
     $stmt->execute();
     
     $stmt->store_result();
-    $stmt->bind_result($id);
-    while ($stmt->fetch()) {
-        $data[] = $id;
-    }
-    
-    $sofar = "";
-    foreach($data as $uid) {
-        if($sofar == "")
-            $sofar = "`id`='$uid'";
-        else
-            $sofar = $sofar . " OR `id`='$uid'";
-    }
-    
-    if($sofar == "")
-        return $arr;
-    
-    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE $sofar" . ($sofar != "" ? "AND " : "") . "`banned`='false' LIMIT 20") or die("Error: Failed to prepare query.");
-    $stmt->execute();
-    
-    $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $name, $email, $banned);
+    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location);
     while ($stmt->fetch()) {
         $arr[] = array(
             "id"=>$id,
             "username"=>$username,
             "name"=>$name,
             "banned"=>$banned,
+            "description"=>$description,
+            "location"=>$location,
             "language"=>$languages
         );
     }
@@ -316,8 +294,9 @@ function generateCSRFToken() {
 
 function usernameExists($username) {
     $mysqli = getConnection();
+    $username = strtolower($username);
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE lower(`username`)=?");
-    $stmt->bind_param('s', strtolower($username));
+    $stmt->bind_param('s', $username);
     $stmt->execute();
     $stmt->store_result();
     
@@ -325,8 +304,9 @@ function usernameExists($username) {
 }
 
 function emailExists($email) {
+    $email = strtolower($email);
     $stmt = getConnection()->prepare("SELECT * FROM `users` WHERE lower(`email`)=?");
-    $stmt->bind_param('s', strtolower($email));
+    $stmt->bind_param('s', $email);
     $stmt->execute();
     $stmt->store_result();
     
@@ -351,8 +331,7 @@ function isUsernameValid($str) {
 
 function showSimilar() {
     if(isSignedIn()) {
-        $settings = getSettings($_SESSION['id']);
-        $array = getUsersByLanguage($settings['languages']);
+        $array = getUsersByLanguage($_SESSION['languages']);
         
         if(sizeof($array) - 1 > 0) {
             echo "<center><h1>Meet other devs...<h1></center><div class=\"container\"><div class=\"row\">";
@@ -361,11 +340,11 @@ function showSimilar() {
 	            if($usr['id'] != $_SESSION['id']) {
                         echo "          <div class=\"col-sm-3\"><center>
                                             <img src=\"assets/user-icons/default.png\" id=\"icon-front\">
-                                            <h3>" . $settings['languages'] . " Developer</h3>
+                                            <h3>" . $_SESSION['html_languages'] . " Developer</h3>
                                         </center></div>";
                         echo "          <div class=\"col-sm-3\">
                                             <center><h2><a href=\"profile.php?id=" . $usr['id'] . "\">" . htmlspecialchars($usr['username']) . "</a></h2>
-                                            This is a sample text description of the user. Later, when I join the `settings` and `users` tables, I'll be able to implement this and make it actually display the real description. For now, however, this pointless paragraph will remain riiiiiight here.
+                                            " . htmlspecialchars($usr['description']) . "
                                         </div></center>";
 	            }
 	        }

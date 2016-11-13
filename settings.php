@@ -22,8 +22,6 @@
                     http_response_code(401);
                 }
             }
-            
-            $settings = getSettings($_SESSION['id']);
         ?>
         <br>
         <form class="form-horizontal" action="settings.php" method="post">
@@ -36,7 +34,7 @@
             <div class="form-group">
               <label class="col-md-4 control-label" for="description">Description</label>
               <div class="col-md-4">                     
-                <textarea class="form-control" id="description" name="description"><?php echo htmlspecialchars($settings['description']); ?></textarea>
+                <textarea class="form-control" id="description" name="description"><?php echo $_SESSION['html_description']; ?></textarea>
               </div>
             </div>
 
@@ -44,7 +42,7 @@
             <div class="form-group">
               <label class="col-md-4 control-label" for="locationx">Location</label>  
               <div class="col-md-5">
-              <input id="locationx" name="locationx" type="text" placeholder="Los Angeles, CA" class="form-control input-md" value="<?php echo htmlspecialchars($settings['location']); ?>">
+              <input id="locationx" name="locationx" type="text" placeholder="Los Angeles, CA" class="form-control input-md" value="<?php echo $_SESSION['html_location']; ?>">
               <span class="help-block">Don't be too specific.</span>  
               </div>
             </div>
@@ -54,7 +52,7 @@
               <label class="col-md-4 control-label" for="languages">Favorite Language</label>
               <div class="col-md-5">
                 <select id="languages" name="languages" class="form-control">
-                  <option value="<?php echo htmlspecialchars($settings['languages']); ?>" selected><b><?php echo htmlspecialchars($settings['languages']); ?></b></option>
+                  <option value="<?php echo $_SESSION['html_languages']; ?>" selected><b><?php echo $_SESSION['html_languages']; ?></b></option>
                   <option value="None">None</option>
                   <option value="Java">Java</option>
                   <option value="C">C</option>
