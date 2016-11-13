@@ -6,8 +6,9 @@ The reason why this is called "codeday-team" is because I don't have a name for 
 
 # Installation
 ## Automatically
-1. Simply execute the script `install.sh`
-2. And double check `includes/config.php` just in case
+1. Clone or download this repository
+2. Simply execute the script `install.sh`
+3. And double check `includes/config.php` just in case
 
 ## Manually
 1. Clone or download this repository
