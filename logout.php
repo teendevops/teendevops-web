@@ -1,12 +1,12 @@
-<html>
-<?php
-include "header.php";
+<?php 
+include "includes/functions.php";
 
+if(isset($_SERVER['HTTP_REFERER'])){
+    header("Location:" . $_SERVER['HTTP_REFERER']);
+}
 // LATER: CSRF and POST check.
-
 logout();
-header("Location: " . $_SERVER['HTTP_REFERER']);
 ?>
-
+<html>
 <script>window.location.replace("index.php");</script>
 </html>
