@@ -19,3 +19,6 @@ The reason why this is called "codeday-team" is because I don't have a name for 
 # Checking syntax
 1. Execute the script `syntax.sh`
 2. If there is no syntax error, it will return nothing. Otherwise, it will print the error.
+
+#Development Branch
+The development branch contains pre-alpah code with breaking changes. It may be updated frequently and without warning and is thus inherently unstable. Caution is advised... 
