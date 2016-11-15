@@ -1,5 +1,5 @@
 <?php
-    include "../../../includes/functions.php";
+include "../../../../server/sitetools/functions.php";
     
     sec_session_start();
     header("Content-Type: text/plain");
