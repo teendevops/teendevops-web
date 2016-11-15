@@ -38,8 +38,8 @@
                             }
                             header("X-XSS-Protection: 1; mode=block"); // force browser xss protection
 			                header("X-Frame-Options: SAMEORIGIN"); // prevent clickjacking attacks
-			                header("x-content-type-options: nosniff"); // prevent mime-type sniffing
-			                header("Content-Security-Policy: script-src 'self'"); // secure content sources
+			                header("X-Content-Type-Options: nosniff"); // prevent mime-type sniffing
+			                // header("Content-Security-Policy: script-src 'self'"); // commented out because it is annoying to configure and I don't have time right now.
                             if(isSignedIn()) {
                                 echo "
                                     <li><a href=\"profile.php?id=" . $_SESSION['id'] . "\">" . SHORT_USER_PROFILE . "</a></li>

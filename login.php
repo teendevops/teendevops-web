@@ -23,7 +23,7 @@
                             $username_or_email = $_POST['username'];
                             $password = $_POST['password'];
                             
-                            $status = login($username_or_email, $password);// or die("Fatal Error! Failed to log in for an unknown reason.");
+                            $status = login($username_or_email, $password);
                             
                             if($status == 0) {
                                 echo "Success.<script>window.location.replace(\"index.php\");</script></body></html>";
