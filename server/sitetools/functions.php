@@ -2,7 +2,8 @@
 include "config.php";
 
 function getConnection() {
-    return new mysqli(HOST, USER, PASSWORD, DATABASE);
+    $dsn = "mysql:host=".HOST.";dbname=".DATABASE;
+    return new PDO($dsn, USER, PASSWORD);
 }
 
 sec_session_start();
@@ -30,26 +31,23 @@ function sec_session_start() {
 }
 
 function register($username, $email, $password) {
-    $mysqli = getConnection();
+    $db = getConnection();
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null')");
-    $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
+    $stmt = $db->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`) VALUES (NULL, :un, :pw, :nm, :em, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null')");
+    $stmt->bindParam(':un', $username);
+    $stmt->bindParam(':pw', $password_hash);
+    $stmt->bindParam(":nm", $username);
+    $stmt->bindParam(":em", $email);
     $stmt->execute();
-        
-    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=? OR `email`=?");
-    $stmt->bind_param('ss', $username, $email);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n); // is this even needed?
-    $stmt->fetch();
 }
 
 function getUser($id) {
     $mysqli = getConnection();
     
-    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id`=?");
-    $stmt->bind_param('i', $id);
+    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id`=:id");
+    $stmt->bindParam(':id', $id);
     $stmt->execute();
+
     $stmt->store_result();
     $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n);
     $stmt->fetch();
