@@ -20,9 +20,9 @@ chmod 740 includes/config.php;
 sed "s/\"USER\", \"\"/\"USER\", \"$username\"/g" includes/config.php > includes/config_change.php;
 mv includes/config_change.php includes/config.php;
 sed "s/\"PASSWORD\", \"\"/\"PASSWORD\", \"$password\"/g" includes/config.php > includes/config_change.php;
-mv includes/config_change.php includes/config.php
-sed "s/\"HOST\", \"localhost\"/\"HOST\", \"$host\"/g" includes/config.php > includes/config_change.php
-mv includes/config_change.php includes/config.php
+mv includes/config_change.php includes/config.php;
+sed "s/\"HOST\", \"localhost\"/\"HOST\", \"$host\"/g" includes/config.php > includes/config_change.php;
+mv includes/config_change.php includes/config.php;
 mysql -u "$(echo $username)" -p"$(echo $password)" < ./codeday-team.sql;
 echo "Configuration complete. For further configuration options, check the config file includes/config.php";
 unset username;
