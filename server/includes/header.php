@@ -1,8 +1,9 @@
 <head>
     <title><?php echo SITE_TITLE; ?></title>
     <meta http-equiv="content-language" content="en" />
-    <meta name="description" content="codeday-team" />
-    <meta name="keywords" content="cdt, codeday, codeday-team, cd-t" />
+    <meta name="description" content="<?php echo strtolower(SITE_TITLE); ?>" />
+    <!-- TODO: Add keywords -->
+    <meta name="keywords" content="<?php echo strtolower(SITE_TITLE); ?>" />
     <meta http-equiv="content-type" content="text/html"; charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
