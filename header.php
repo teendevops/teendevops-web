@@ -18,10 +18,10 @@
 ?>
 
 <head>
-    <title>CodeDay-Team</title>
+    <title><?php $sitename = htmlspecialchars(NAME); echo $sitename; ?></title>
     <meta http-equiv="content-language" content="en" />
-    <meta name="description" content="codeday-team" />
-    <meta name="keywords" content="cdt, codeday, codeday-team, cd-t" />
+    <meta name="description" content="<?php echo $sitename; ?>" />
+    <meta name="keywords" content="<?php echo $sitename; ?>" />
     <meta http-equiv="content-type" content="text/html"; charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,7 +31,7 @@
     <nav>
         <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container-fluid">
-                <div class="navbar-header"><a class="navbar-brand" href="index.php" style="font-family: monospace !important">codeday-team</a>
+                <div class="navbar-header"><a class="navbar-brand" href="index.php" style="font-family: monospace !important"><?php echo $sitename; if(!SECURE) echo ' / <b style="color:red;">development mode</b>';?></a>
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                     </button>
                 </div>
