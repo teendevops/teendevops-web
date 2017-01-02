@@ -1,2 +1,8 @@
 includes/config.php
 config.php
+
+push.sh
+start.sh
+
+.well-known/keybase.txt
+id_rsa.pub
