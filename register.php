@@ -20,6 +20,8 @@
                 </script>
                 ";
 
+                if(!SECURE)
+                    echo '<center><div style="color:red;"><b>Warning:</b> Development mode is enabled. Be sure not to reuse a password while it is enabled, because the site may not be secured.</div></center><br><br>';
                 if($_SERVER['REQUEST_METHOD'] == "POST") {
                     if(!(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm_password']))) {
                         echo $form . "<br><div class=\"error\">" . ERROR_FIELDS_EMPTY . "</div>";
