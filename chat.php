@@ -76,7 +76,10 @@
                        channel: <?php if($there) echo $_GET['channel']; else echo "1"; ?>
                    },
                    success: function (response) {
-                      // you will get response from your php page (what you echo or print)
+                      // handle the response here
+                      var object = JSON.parse(response);
+                      if(!object.success)
+                        alert("Message failed to send: " + object.error);
                    }
                });
             }
