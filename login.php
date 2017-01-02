@@ -4,7 +4,7 @@
     <body>
         <br>
         <?php
-            if(isSignedIn()) { // later redirect to settings.php?return=<url>
+            if(isSignedIn()) { // later redirect to settings.php?return=<url> ...
                 echo "<div class=\"message\">" . MESSAGE_ALREADY_IN . "</div>";
             } else {
                 $form = "<form class=\"form-horizontal\" action=\"login.php\" method=\"post\"> <fieldset> <!-- Form Name --> <center><legend>Login</legend></center>" . printCSRFToken() . "<!-- Text input--> <div class=\"form-group\"><label class=\"col-md-4 control-label\" for=\"username\">Username or Email</label> <div class=\"col-md-5\"> <input id=\"username\" name=\"username\" type=\"text\" placeholder=\"Enter your username or email...\" class=\"form-control input-md\" required=\"\"> <span class=\"help-block\">You can enter either your username or your email address.</span> </div> </div> <!-- Password input--> <div class=\"form-group\"> <label class=\"col-md-4 control-label\" for=\"password\">Password</label> <div class=\"col-md-5\"> <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Enter your password...\" class=\"form-control input-md\" required=\"\"> <span class=\"help-block\">Never tell anyone your password.</span> </div> </div> <!-- Button --> <div class=\"form-group\"> <label class=\"col-md-4 control-label\" for=\"login\"></label> <div class=\"col-md-4\"> <button id=\"login\" name=\"login\" class=\"btn btn-primary\">Login</button> </div> </div> </fieldset> </form>";
