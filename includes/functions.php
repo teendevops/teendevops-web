@@ -1,16 +1,19 @@
 <?php
 include "config.php";
 
+sec_session_start();
+
+/* returns a new mysqli object */
 function getConnection() {
     return new mysqli(HOST, USER, PASSWORD, DATABASE);
 }
 
-sec_session_start();
-
+/* returns a boolean; whether or not the user is signed in */
 function isSignedIn() {
     return isset($_SESSION['signed_in']) && $_SESSION['signed_in'];
 }
 
+/* securely starts a new session */
 function sec_session_start() {
     $session_name = SESSION_ID_NAME;
     $secure = false; // true if https
@@ -29,6 +32,7 @@ function sec_session_start() {
         generateCSRFToken();
 }
 
+/* registers a new user */
 function register($username, $email, $password) {
     $mysqli = getConnection();
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
@@ -44,6 +48,7 @@ function register($username, $email, $password) {
     $stmt->fetch();
 }
 
+/* returns an array with information about the given user */
 function getUser($id) {
     $mysqli = getConnection();
 
@@ -67,10 +72,12 @@ function getUser($id) {
     return $user;
 }
 
+/* obselete. see:getUser */
 function getSettings($id_real) { // this function is obselete.
     return getUser($id_real);
 }
 
+/* sets the settings for a user. TODO: make an array instead of variables */
 function setSettings($id, $description, $languages, $location) {
     $mysqli = getConnection();
 
@@ -90,6 +97,7 @@ function setSettings($id, $description, $languages, $location) {
     $stmt->execute() or die("Error: Failed to save settings.");
 }
 
+/* logs in the user */
 function login($username_or_email, $password_real) {
     $mysqli = getConnection();
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=? OR `email`=?");
@@ -126,16 +134,17 @@ function login($username_or_email, $password_real) {
                 $_SESSION['location'] = $location;
                 $_SESSION['html_location'] = htmlspecialchars($location);
 
-                return 0;
+                return 0; // success
             } else {
-                return 1;
+                return 1; // failure
             }
         }
     }
 
-    return 3;
+    return 3; // unknown error
 }
 
+/* store the login attempt */
 function loginAttempt($mysqli, $id, $success) {
     $sc = ($success) ? 'true' : 'false';
     $forwarded = (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] !== NULL) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : "undefined";
@@ -145,6 +154,7 @@ function loginAttempt($mysqli, $id, $success) {
     $stmt->execute() or die("Error: Failed to execute query");
 }
 
+/* returns a boolean; whether or not a user is being brute forced */
 function isBruteForcing($id, $tops) {
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
 	$stmt = $mysqli->prepare("SELECT `time` FROM `login_attempts` WHERE `id`=? OR `ip`=? AND `time`>(NOW() - INTERVAL 1 HOUR) AND `success`='false'");
@@ -157,6 +167,7 @@ function isBruteForcing($id, $tops) {
 	return false;
 }
 
+/* returns a portion of the chat */
 function getChat($id, $limit, $deleted) {
     $arr = array();
 
@@ -181,6 +192,7 @@ function getChat($id, $limit, $deleted) {
     return $arr;
 }
 
+/* sends a chat message to the given channel. TODO: use id rather than username */
 function sendChat($username, $channel, $message) {
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
     $stmt = $mysqli->prepare("INSERT INTO `chat` (`username`, `timestamp`, `channel`, `message`, `deleted`, `id`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, 'false', NULL)");
@@ -188,6 +200,7 @@ function sendChat($username, $channel, $message) {
     $stmt->execute(); // insert row into chat table
 }
 
+/* returns an array of channels */
 function getChannels() {
     $arr = array();
 
@@ -209,6 +222,7 @@ function getChannels() {
     return $arr;
 }
 
+/* returns a list of users who program in a language */
 function getUsersByLanguage($language) {
     $arr = array();
 
@@ -235,11 +249,13 @@ function getUsersByLanguage($language) {
     return $arr;
 }
 
+/* returns a boolean; whether or not a language is a valid one */
 function isLanguageValid($language) {
     $allowed = array('None', 'Java', 'C', 'C++', 'C#', 'Python', 'PHP', 'NodeJS', 'Scratch', 'Visual Basic', 'HTML/CSS/JS', 'Assembly', 'Ruby', 'Perl', 'Pascal', 'Scala', 'Lua', 'D', 'Swift', 'Objective-C', 'R', 'Go', 'SQL');
     return in_array($language, $allowed);
 }
 
+/* returns whether or not a channel is existant by id */
 function isChannelExistant($id) {
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
 	$stmt = $mysqli->prepare("SELECT * FROM `channels` WHERE `deleted`='false' AND `id`=? LIMIT 1000");
@@ -259,10 +275,12 @@ function isChannelExistant($id) {
     return false;
 }
 
+/* returns a boolean; whether or not a string has content */
 function gone($var) {
     return ($var == '' || $var == NULL) ? true : false;
 }
 
+/* logs the user out */
 function logout() { // logout
     session_destroy(); // destroy session
     $_SESSION = array(); // overwrite variables
@@ -276,24 +294,29 @@ function logout() { // logout
             $params["httponly"]);
 } // and... tada!
 
+/* returns the CSRF token as a string */
 function getCSRFToken() {
     if(!isset($_SESSION['csrf']) || $_SESSION['csrf'] == "")
         generateCSRFToken();
     return $_SESSION['csrf'];
 }
 
+/* generates a CSRF token */
 function generateCSRFToken() {
     $_SESSION['csrf'] = md5(rand() . uniqid(rand(), true) . rand());
 }
 
+/* checks if a CSRF token is valid and returns true or false */
 function checkCSRFToken($csrf) {
     return $csrf == getCSRFToken();
 }
 
+/* prints the input for the CSRF token */
 function printCSRFToken() {
     echo '<input type="hidden" id="csrf" name="csrf" value="' . getCSRFToken() . '">';
 }
 
+/* returns a boolean; whether or not the username is taken */
 function usernameExists($username) {
     $mysqli = getConnection();
     $username = strtolower($username);
@@ -305,6 +328,7 @@ function usernameExists($username) {
     return $stmt->num_rows != 0;
 }
 
+/* checks if the email is taken */
 function emailExists($email) {
     $email = strtolower($email);
     $stmt = getConnection()->prepare("SELECT * FROM `users` WHERE lower(`email`)=?");
@@ -315,6 +339,7 @@ function emailExists($email) {
     return $stmt->num_rows != 0;
 }
 
+/* returns a boolean; whether or not a password is secure */
 function isPasswordSecure($password) {
     // DANGER: To protect your sanity, do not read the below string!
     // it contains some of the most common passwords. There is some pretty cancerous stuff below!
@@ -323,14 +348,17 @@ function isPasswordSecure($password) {
     return !(strpos($list, $password) !== false);
 }
 
+/* returns a boolean; whether or not the given email is valid */
 function isEmailValid($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
+/* returns a boolean; whether or not the given username is valid */
 function isUsernameValid($str) {
     return preg_match('/^[a-zA-Z0-9_]+$/',$str);
 }
 
+/* prints similar devs */
 function showSimilar() {
     if(isSignedIn()) {
         $array = getUsersByLanguage($_SESSION['languages']);
