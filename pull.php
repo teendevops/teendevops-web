@@ -11,6 +11,60 @@ $USER='duncan';
 <html>
     <head>
         <title>git pull</title>
+<style>
+.blinking-cursor {
+  -webkit-animation: 1s blink step-end infinite;
+  -moz-animation: 1s blink step-end infinite;
+  -ms-animation: 1s blink step-end infinite;
+  -o-animation: 1s blink step-end infinite;
+  animation: 1s blink step-end infinite;
+}
+
+@keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: green;
+  }
+}
+
+@-moz-keyframes blink {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: green;
+  }
+}
+
+@-webkit-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: green;
+  }
+}
+
+@-ms-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: green;
+  }
+}
+
+@-o-keyframes "blink" {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: green;
+  }
+}
+</style>
     </head>
     <body style="background-color:black;">
         <pre style="color:#0f0;">
@@ -18,6 +72,13 @@ $ git pull -v
 <?php
 echo shell_exec("sudo -u $USER /usr/bin/git pull -v 2>&1");
 ?>
+
+$ sh syntax.sh
+<?php
+echo shell_exec("sudo -u $USER /usr/bin/sh syntax.sh 2>&1");
+?>
+
+$ <span class="blinking-cursor">|</span>
         </pre>
     </body>
 </html>
