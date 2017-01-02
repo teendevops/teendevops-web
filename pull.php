@@ -18,6 +18,11 @@ $USER='duncan';
   -ms-animation: 1s blink step-end infinite;
   -o-animation: 1s blink step-end infinite;
   animation: 1s blink step-end infinite;
+-webkit-transform:scale(1.5, 1.0);
+-moz-transform:scale(1.5, 1.0);
+-ms-transform:scale(1.5, 1.0);
+-o-transform:scale(1.5, 1.0);
+transform:scale(1.5,1.0);
 }
 
 @keyframes "blink" {
@@ -78,7 +83,6 @@ $ sh syntax.sh
 echo shell_exec("sudo -u $USER /usr/bin/sh syntax.sh 2>&1");
 ?>
 
-$ <span class="blinking-cursor">|</span>
-        </pre>
+$ <span class="blinking-cursor">|</span></pre>
     </body>
 </html>
