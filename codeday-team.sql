@@ -59,7 +59,7 @@ CREATE TABLE `chat` (
 
 CREATE TABLE `login_attempts` (
   `id` int(11) NOT NULL COMMENT 'User ID',
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT AS `Time of Login Attempt`,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Time of Login Attempt',
   `ip` varchar(50) NOT NULL COMMENT 'IP Address of Request',
   `insecure_ip` varchar(50) NOT NULL COMMENT 'Spoofed IP Address of Request',
   `success` varchar(5) NOT NULL COMMENT 'Login Success?'
