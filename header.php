@@ -3,7 +3,7 @@
     include "includes/strings.php";
 
     if(EASTER_EGGS) {
-        header(base64_decode("WC1IZWxsby1IYWNrZXI6IEhlbGxvISBJIHdvdWxkIGxvdmUgdG8gaGF2ZSBhIGNoYXQgd2l0aCB5b3Ugc29tZXRpbWUuIFlvdSBjYW4gc2hvb3QgbWUgYW4gZW1haWwgYXJpbmVzYXVAZ21haWwuY29tLiA6KQ==")); // if something goes wrong, blame it on Arav :P
+        header(base64_decode("SGVsbG8hIEknZCBsb3ZlIHRvIGNoYXQgc29tZSB0aW1lLiBGZWVsIGZyZWUgdG8gc2hvb3QgbWUgYW4gZW1haWwgYXQgbWVAYXJpbmVycm9uLmNvbSA6KQ==")); // if something goes wrong, blame it on Arav :P
         header("X-Easter-Egg: You found an easter egg! id=e4st3r_egg_5");
     }
     header("X-XSS-Protection: 1; mode=block"); // force browser xss protection
