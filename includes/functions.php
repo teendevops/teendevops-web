@@ -72,6 +72,30 @@ function getUser($id) {
     return $user;
 }
 
+/* returns an array with information about the given user */
+function getUserByName($id) {
+    $mysqli = getConnection();
+
+    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n);
+    $stmt->fetch();
+
+    $user = array();
+    $user['id'] = $id_n;
+    $user['username'] = $username_n;
+    $user['email'] = $email_n;
+    $user['name'] = $name_n;
+    $user['banned'] = $banned_n;
+    $user['description'] = $description_n;
+    $user['languages'] = $languages_n;
+    $user['location'] = $location_n;
+
+    return $user;
+}
+
 /* obselete. see:getUser */
 function getSettings($id_real) { // this function is obselete.
     return getUser($id_real);
