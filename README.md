@@ -4,6 +4,11 @@
 # About
 The reason why this is called "codeday-team" is because I don't have a name for it yet, and I was developing it for/at CodeDay.  I'll rename when we find a name for it.
 
+# Live Version
+Thanks to @virtualdxs, we now have a live version here: http://box.k7dxs.xyz/
+
+Please don't reuse a password on the site though, because it is for testing and may not be secure. Also, the page is sent via HTTP and is not encrypted.
+
 # Installation
 ## Automatically
 1. Clone or download this repository
