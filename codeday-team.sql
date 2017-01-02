@@ -32,7 +32,7 @@ CREATE TABLE `channels` (
   `id` int(11) NOT NULL COMMENT 'Channel ID',
   `creator` varchar(50) NOT NULL COMMENT 'Channel Creator',
   `title` varchar(20) NOT NULL,
-  `description` varchar(1000) NOT NULL DEFAULT 'A channel for 1337 haxx0rs',
+  `description` varchar(1000) NOT NULL DEFAULT 'A channel for 1337 h@xX0rz',
   `deleted` varchar(5) NOT NULL DEFAULT 'false'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table contains all of the channels.';
 
