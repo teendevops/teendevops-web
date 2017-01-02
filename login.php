@@ -15,7 +15,7 @@
                             echo $form . "<br><div class=\"error\">" . ERROR_FIELDS_EMPTY . "</div>";
                         } else {
                             if(!CAN_LOGIN)
-                                die("Sorry, but logging in is temporarily disabled.");
+                                die(ERROR_DISABLED_LOGIN);
 
                             $username_or_email = $_POST['username'];
                             $password = $_POST['password'];

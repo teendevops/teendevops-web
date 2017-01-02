@@ -1,8 +1,10 @@
 <?php
 
 define("ERROR_FIELDS_EMPTY", "Error: All fields must be filled out.");
-define("ERROR_SHORT_PASSWORD", "Error: Passwords must be more than 5 characters.");
-define("ERROR_SHORT_USERNAME", "Error: Usernames must be more than 5 characters and less than 40.");
+define("ERROR_SHORT_PASSWORD", "Error: Passwords must be more than 6 characters.");
+define("ERROR_SHORT_USERNAME", "Error: Usernames must be more than 5 characters and less than 20.");
+define("ERROR_DISABLED_REGISTRATION", "Error: Sorry, but registration is temporarily disabled.");
+define("ERROR_DISABLED_LOGIN", "Error: Sorry, but logging in is temporarily disabled.");
 define("ERROR_ACCOUNT_BANNED", "Error: Account has been banned.");
 define("ERROR_ACCOUNT_LOCKOUT", "Error: This account is temporarily locked due to over 10 incorrect password attempts. Please email us if you believe something is wrong.");
 define("ERROR_PASSWORD_MATCH", "Error: Passwords do not match.");
