@@ -1,14 +1,14 @@
 <html>
     <?php include "header.php"; ?>
-    
+
     <body>
         <br>
         <div class="container">
             <?php
                 $edit = "<a href=\"settings.php\"><div class=\"edit\"><span class=\"glyphicon glyphicon-pencil\"></span> edit</div></a>";
-                
+
                 if(!empty($_GET['id']))
-                    $user = getUser($_GET['id']); 
+                    $user = getUser($_GET['id']);
                 else {
                     if(isSignedIn()) {
                         $user = getUser($_SESSION['id']);
@@ -27,9 +27,9 @@
                             if(empty($language) || $language == "None") {
                                 echo "Language Unspecified";
                             } else {
-                                echo $language . " Developer";
+                                echo htmlspecialchars($language) . " Developer";
                             }
-                            
+
                             echo "</h2>" . $edit;
                         ?>
                     </center>

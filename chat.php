@@ -1,15 +1,15 @@
 <html>
     <?php
-        include "header.php"; 
+        include "header.php";
 
         if(!isSignedIn()) {
-            echo "Please login! <script>window.location.replace(\"login.php?return=settings\");</script></html>";
+            echo "Please login! <script>window.location.replace(\"login.php?return=chat\");</script></html>";
             die();
         }
     ?>
-    
+
     <script src="js/chat.js" crossorigin="anonymous"></script>
-    
+
     <body>
         <br>
         <div class="container">
@@ -22,7 +22,7 @@
                 <div id="channelWindow" class="col-sm-3">
                     <?php
                         $array = getChannels();
-                        
+
                         foreach($array as $channel) {
                             echo "<a href=\"chat.php?channel=" . $channel['id'] . "\">" . htmlspecialchars($channel['title']) . "</a><br>";
                         }
@@ -45,9 +45,9 @@
             $there = !gone($_GET['channel']);
         ?>
         <script>
-            setInterval(refetch, 500);
+            setInterval(refetch, 300);
             function refetch() {
-                var urlx = <?php 
+                var urlx = <?php
                     if($there) {
                         echo '"htmlchat.php?channel=' . preg_replace("/[^0-9]/", "", $_GET['channel']) .  '"';
                     } else {
@@ -62,7 +62,7 @@
                    }
                 });
             }
-            
+
             function send() {
                 var csrf = "<?php echo getCSRFToken(); ?>";
                 var msg = document.getElementById("sofar").value;
@@ -76,11 +76,11 @@
                        channel: <?php if($there) echo $_GET['channel']; else echo "1"; ?>
                    },
                    success: function (response) {
-                      // you will get response from your php page (what you echo or print)                 
+                      // you will get response from your php page (what you echo or print)
                    }
                });
             }
-            
+
             $("textarea").keydown(function(e){
                 if (e.keyCode == 13 && !e.shiftKey) {
                     send();
