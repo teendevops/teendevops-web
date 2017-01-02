@@ -9,7 +9,7 @@
     ?>
 
     <body>
-        <?php            
+        <?php
             if($_SERVER['REQUEST_METHOD'] == "POST") {
                 if(isset($_POST['csrf']) && checkCSRFToken($_POST['csrf'])) {
                     if(!isLanguageValid($_POST['languages']))
@@ -27,7 +27,7 @@
 
             <!-- Form Name -->
             <center><legend>Settings</legend></center>
-            <?php printCSRFToken(); ?>
+            <?php echo printCSRFToken(); ?>
             <!-- Textarea -->
             <div class="form-group">
               <label class="col-md-4 control-label" for="description">Description</label>

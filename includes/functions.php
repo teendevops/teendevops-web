@@ -313,7 +313,7 @@ function checkCSRFToken($csrf) {
 
 /* prints the input for the CSRF token */
 function printCSRFToken() {
-    echo '<input type="hidden" id="csrf" name="csrf" value="' . getCSRFToken() . '">';
+    return '<input type="hidden" id="csrf" name="csrf" value="' . getCSRFToken() . '">';
 }
 
 /* returns a boolean; whether or not the username is taken */
