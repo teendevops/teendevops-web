@@ -1,11 +1,12 @@
-<?php 
+<?php
 include "includes/functions.php";
 
-if(isset($_SERVER['HTTP_REFERER'])){
-    header("Location:" . $_SERVER['HTTP_REFERER']);
-}
 // LATER: CSRF and POST check.
-logout();
+if(checkCSRFToken($_REQUEST['csrf']))
+    logout();
+else {
+    die("Invalid CSRF token.");
+}
 ?>
 <html>
 <script>window.location.replace("index.php");</script>

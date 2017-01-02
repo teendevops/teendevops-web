@@ -1,19 +1,17 @@
 <html>
     <?php
         include "header.php";
-        
+
         if(!isSignedIn()) {
             echo "Please login! <script>window.location.replace(\"login.php?return=settings\");</script>";
             die();
         }
     ?>
-    
+
     <body>
-        <?php 
-            $csrftoken = getCSRFToken();
-            
+        <?php            
             if($_SERVER['REQUEST_METHOD'] == "POST") {
-                if(isset($_POST['csrf']) && $_POST['csrf'] == $csrftoken) {
+                if(isset($_POST['csrf']) && checkCSRFToken($_POST['csrf'])) {
                     if(!isLanguageValid($_POST['languages']))
                         $_POST['languages'] = "None";
                     setSettings($_SESSION['id'], $_POST['description'], $_POST['languages'], $_POST['locationx']);
@@ -29,21 +27,21 @@
 
             <!-- Form Name -->
             <center><legend>Settings</legend></center>
-            <input type="hidden" id="csrf" name="csrf" value="<?php echo $csrftoken; ?>">
+            <?php printCSRFToken(); ?>
             <!-- Textarea -->
             <div class="form-group">
               <label class="col-md-4 control-label" for="description">Description</label>
-              <div class="col-md-4">                     
+              <div class="col-md-4">
                 <textarea class="form-control" id="description" name="description"><?php echo $_SESSION['html_description']; ?></textarea>
               </div>
             </div>
 
             <!-- Text input-->
             <div class="form-group">
-              <label class="col-md-4 control-label" for="locationx">Location</label>  
+              <label class="col-md-4 control-label" for="locationx">Location</label>
               <div class="col-md-5">
               <input id="locationx" name="locationx" type="text" placeholder="Los Angeles, CA" class="form-control input-md" value="<?php echo $_SESSION['html_location']; ?>">
-              <span class="help-block">Don't be too specific.</span>  
+              <span class="help-block">Don't be too specific.</span>
               </div>
             </div>
 

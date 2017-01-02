@@ -22,10 +22,10 @@ function sec_session_start() {
                              $secure,
                              $httponly);
     session_name($session_name);
-    
+
     session_start();
-    
-    if(!isset($_SESSION['csrf']))
+
+    if(gone($_SESSION['csrf']))
         generateCSRFToken();
 }
 
@@ -35,7 +35,7 @@ function register($username, $email, $password) {
     $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null')");
     $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
     $stmt->execute();
-        
+
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=? OR `email`=?");
     $stmt->bind_param('ss', $username, $email);
     $stmt->execute();
@@ -46,21 +46,15 @@ function register($username, $email, $password) {
 
 function getUser($id) {
     $mysqli = getConnection();
-    
+
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id`=?");
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n);
     $stmt->fetch();
-    
+
     $user = array();
-    $user['id'] = "-1";
-    $user['username'] = "404page";
-    $user['email'] = "404@page.com";
-    $user['name'] = "404page";
-    $user['banned'] = "false";
-    
     $user['id'] = $id_n;
     $user['username'] = $username_n;
     $user['email'] = $email_n;
@@ -69,7 +63,7 @@ function getUser($id) {
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
-    
+
     return $user;
 }
 
@@ -79,7 +73,7 @@ function getSettings($id_real) { // this function is obselete.
 
 function setSettings($id, $description, $languages, $location) {
     $mysqli = getConnection();
-    
+
     if(isSignedIn() && $id == $_SESSION['id']) {
         $_SESSION['description'] = $description;
         $_SESSION['html_description'] = htmlspecialchars($description);
@@ -90,7 +84,7 @@ function setSettings($id, $description, $languages, $location) {
         $_SESSION['location'] = $location;
         $_SESSION['html_location'] = $location;
     }
-    
+
     $stmt = $mysqli->prepare("UPDATE `users` SET `description`=?, `languages`=?, `location`=? WHERE `id`=?");
     $stmt->bind_param('sssi', $description, $languages, $location, $id);
     $stmt->execute() or die("Error: Failed to save settings.");
@@ -101,9 +95,9 @@ function login($username_or_email, $password_real) {
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=? OR `email`=?");
     $stmt->bind_param('ss', $username_or_email, $username_or_email) or die("Error: Failed to bind params first time");
     $stmt->execute() or die("Error: Failed to select user");
-    
+
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location) or die("Error: Failed to bind params first time");
+    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location) or die("Error: Failed to bind params second time");
     while ($stmt->fetch() ) {
         if(isBruteForcing($id, MAX_LOGIN_ATTEMPTS)) {
             return 4;
@@ -112,7 +106,7 @@ function login($username_or_email, $password_real) {
         } else {
             $success = password_verify($password_real, $password);
             loginAttempt($mysqli, $id, $success);
-            
+
             if($success) {
                 generateCSRFToken();
                 $_SESSION['id'] = $id;
@@ -131,14 +125,14 @@ function login($username_or_email, $password_real) {
                 $_SESSION['html_language'] = htmlspecialchars($languages);
                 $_SESSION['location'] = $location;
                 $_SESSION['html_location'] = htmlspecialchars($location);
-                
+
                 return 0;
             } else {
                 return 1;
             }
         }
     }
-    
+
     return 3;
 }
 
@@ -147,7 +141,7 @@ function loginAttempt($mysqli, $id, $success) {
     $forwarded = (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] !== NULL) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : "undefined";
     $stmt = $mysqli->prepare("INSERT INTO `login_attempts` (`id`, `time`, `ip`, `insecure_ip`, `success`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)") or die("Error: Failed to prepare statement @ login_attempts");
     $stmt->bind_param('isss', $id, $_SERVER['REMOTE_ADDR'], $forwarded, $sc) or die("Error: Failed to login bind param.");
-    
+
     $stmt->execute() or die("Error: Failed to execute query");
 }
 
@@ -157,7 +151,7 @@ function isBruteForcing($id, $tops) {
 	$stmt->bind_param ('is', $id, $_SERVER['REMOTE_ADDR']);
 	$stmt->execute() or die("Error: Failed to execute brute forcing query");
 	$stmt->store_result();
-	
+
 	if ($stmt->num_rows > $tops)
 		return true;
 	return false;
@@ -165,12 +159,12 @@ function isBruteForcing($id, $tops) {
 
 function getChat($id, $limit, $deleted) {
     $arr = array();
-    
+
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
 	$stmt = $mysqli->prepare("SELECT * FROM `chat` WHERE `channel`=? AND `deleted`=? LIMIT ?");
     $stmt->bind_param('ssi', $id, $deleted, $limit);
     $stmt->execute();
-    
+
     $stmt->store_result();
     $stmt->bind_result($username, $timestamp, $channel, $message, $deleted, $id_n);
     while ($stmt->fetch()) {
@@ -183,7 +177,7 @@ function getChat($id, $limit, $deleted) {
             "message_id"=>$id_n
         );
     }
-    
+
     return $arr;
 }
 
@@ -196,11 +190,11 @@ function sendChat($username, $channel, $message) {
 
 function getChannels() {
     $arr = array();
-    
+
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
 	$stmt = $mysqli->prepare("SELECT * FROM `channels` WHERE `deleted`='false' LIMIT 1000");
     $stmt->execute();
-    
+
     $stmt->store_result();
     $stmt->bind_result($id, $creator, $title, $description, $deleted);
     while ($stmt->fetch()) {
@@ -211,19 +205,19 @@ function getChannels() {
             "creator"=>$creator,
         );
     }
-    
+
     return $arr;
 }
 
 function getUsersByLanguage($language) {
     $arr = array();
-    
+
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
-    
+
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `languages`=? AND `banned`='false' LIMIT 20") or die("Error: Failed to prepare query.");
 	$stmt->bind_param("s", $language);
     $stmt->execute();
-    
+
     $stmt->store_result();
     $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location);
     while ($stmt->fetch()) {
@@ -237,7 +231,7 @@ function getUsersByLanguage($language) {
             "language"=>$languages
         );
     }
-    
+
     return $arr;
 }
 
@@ -251,17 +245,17 @@ function isChannelExistant($id) {
 	$stmt = $mysqli->prepare("SELECT * FROM `channels` WHERE `deleted`='false' AND `id`=? LIMIT 1000");
 	$stmt->bind_param('i', $id);
     $stmt->execute();
-    
+
     $stmt->store_result();
     $stmt->bind_result($id_n, $creator, $title, $description, $deleted);
-    
+
     while ($stmt->fetch()) {
         if($id_n == $id)
             return true;
         else
             return false;
     }
-    
+
     return false;
 }
 
@@ -272,13 +266,13 @@ function gone($var) {
 function logout() { // logout
     session_destroy(); // destroy session
     $_SESSION = array(); // overwrite variables
-     
-    $params = session_get_cookie_params(); 
+
+    $params = session_get_cookie_params();
     setcookie(session_name(), // remove session cookie
-            '', time() - 42000, 
-            $params["path"], 
-            $params["domain"], 
-            $params["secure"], 
+            '', time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
             $params["httponly"]);
 } // and... tada!
 
@@ -292,6 +286,14 @@ function generateCSRFToken() {
     $_SESSION['csrf'] = md5(rand() . uniqid(rand(), true) . rand());
 }
 
+function checkCSRFToken($csrf) {
+    return $csrf == getCSRFToken();
+}
+
+function printCSRFToken() {
+    echo '<input type="hidden" id="csrf" name="csrf" value="' . getCSRFToken() . '">';
+}
+
 function usernameExists($username) {
     $mysqli = getConnection();
     $username = strtolower($username);
@@ -299,7 +301,7 @@ function usernameExists($username) {
     $stmt->bind_param('s', $username);
     $stmt->execute();
     $stmt->store_result();
-    
+
     return $stmt->num_rows != 0;
 }
 
@@ -309,7 +311,7 @@ function emailExists($email) {
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $stmt->store_result();
-    
+
     return $stmt->num_rows != 0;
 }
 
@@ -317,7 +319,7 @@ function isPasswordSecure($password) {
     // DANGER: To protect your sanity, do not read the below string!
     // it contains some of the most common passwords. There is some pretty cancerous stuff below!
     $list = "123456\npassword\n12345678\nqwerty\n123456789\n12345\n1234\n111111\n1234567\ndragon\nasdfasdf\n123123\nbaseball\nabc123\nfootball\nmonkey\nletmein\n696969\nshadow\nmaster\n666666\nqwertyuiop\n123321\nmustang\n1234567890\nmichael\n654321\npussy\nsuperman\n1qaz2wsx\n7777777\nfuckyou\n121212\n000000\nqazwsx\n123qwe\nkiller\ntrustno1\njordan\njennifer\nzxcvbnm\nasdfgh\nhunter\nbuster\nsoccer\nharley\nbatman\nandrew\ntigger\nsunshine\niloveyou\nfuckme\n2000\ncharlie\nrobert\nthomas\nhockey\nranger\ndaniel\nstarwars\nklaster\n112233\ngeorge\nasshole\ncomputer\nmichelle\njessica\npepper\n1111\nzxcvbn\n555555\n11111111\n131313\nfreedom\n777777\npass\nfuck\nmaggie\n159753\naaaaaa\nginger\nprincess\njoshua\ncheese\namanda\nsummer\nlove\nashley\n6969\nnicole\nchelsea\nbiteme\nmatthew\naccess\nyankees\n987654321\ndallas\naustin\nthunder\ntaylor\nmatrix\nincorrect";
-    
+
     return !(strpos($list, $password) !== false);
 }
 
@@ -332,10 +334,10 @@ function isUsernameValid($str) {
 function showSimilar() {
     if(isSignedIn()) {
         $array = getUsersByLanguage($_SESSION['languages']);
-        
+
         if(sizeof($array) - 1 > 0) {
             echo "<center><h1>Meet other devs...<h1></center><div class=\"container\"><div class=\"row\">";
-            
+
             foreach($array as $usr) {
 	            if($usr['id'] != $_SESSION['id']) {
                         echo "          <div class=\"col-sm-3\"><center>
@@ -348,7 +350,7 @@ function showSimilar() {
                                         </div></center>";
 	            }
 	        }
-            
+
             echo "</div></div>";
         }
     }

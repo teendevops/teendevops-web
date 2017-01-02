@@ -1,4 +1,4 @@
-<?php 
+<?php
     include "includes/functions.php";
     include "includes/strings.php";
 
@@ -40,11 +40,11 @@
                         <?php
 			                // header("Content-Security-Policy: script-src 'self'"); // commented out because it is annoying to configure and I don't have time right now.
                             if(isSignedIn()) {
-                                echo "
-                                    <li><a href=\"profile.php?id=" . $_SESSION['id'] . "\">" . SHORT_USER_PROFILE . "</a></li>
-                                    <li><a href=\"settings.php\">" . SHORT_USER_SETTINGS . "</a></li>
-                                    <li><a href=\"logout.php\">" . SHORT_USER_LOGOUT . "</a></li>
-                                ";
+                                echo '
+                                    <li><a href="profile.php?id=' . $_SESSION['id'] . '">' . SHORT_USER_PROFILE . '</a></li>
+                                    <li><a href="settings.php">' . SHORT_USER_SETTINGS . '</a></li>
+                                    <li><a href="logout.php?csrf=' . getCSRFToken() . '">' . SHORT_USER_LOGOUT . '</a></li>
+                                ';
                             } else {
                                 if(CAN_LOGIN)
                                     echo "<li><a href=\"login.php\">" . SHORT_USER_LOGIN . "</a></li>";
