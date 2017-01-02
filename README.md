@@ -23,4 +23,4 @@ Please don't reuse a password on the site though, because it is for testing and 
 
 # Checking syntax
 1. Execute the script `syntax.sh`
-2. If there is no syntax error, it will return nothing. Otherwise, it will print the error.
+2. If there is no syntax error, it will return a success message. Otherwise, it will print the error.
