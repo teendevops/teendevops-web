@@ -45,7 +45,7 @@
             $there = !gone($_GET['channel']);
         ?>
         <script>
-            setInterval(refetch, 300);
+            setInterval(refetch, 600);
             function refetch() {
                 var urlx = <?php
                     if($there) {

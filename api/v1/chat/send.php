@@ -11,7 +11,7 @@
         if(!isSignedIn()) {
             $json['error'] = 'You must be signed in to do that.';
             die(json_encode($json));
-        } else if(gone($_POST['csrf']) || checkCSRFToken($_POST['csrf'])) {
+        } else if(gone($_POST['csrf']) || !checkCSRFToken($_POST['csrf'])) {
             $json['error'] = 'Invalid CSRF Token.';
             die(json_encode($json));
         } else if(gone($_POST['msg']) || gone($_POST['channel'])) {
