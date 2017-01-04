@@ -34,7 +34,7 @@ function sec_session_start() {
 
 /* returns the absolute url if possible */
 function toAbsoluteURL($relative) {
-    return (!gone(HTTPS) ? 'https' : 'http') . '://' . (!gone(SITE) ? SITE : (!gone($_SERVER['HTTP_HOST']) ? (!gone($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost')) . (substr($request, 0, 1) !== '/' ? '/' : '') . $request;
+    return ((!gone(HTTPS) ? 'https' : 'http') .'://' . (!gone(SITE) ? SITE : (!gone($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : (!gone($_SERVER['SERVER_NAME']) ?$_SERVER['SERVER_NAME'] : 'localhost'))) .(substr($request, 0, 1) !== '/' ? '/' : '') . $request);
 }
 
 /* registers a new user */
