@@ -4,6 +4,11 @@
     <body>
         <br>
         <?php
+            $form = "";
+            function error($reason) {
+                return $form . "<br><div class=\"error\">" . $reason . "</div>";
+            }
+
             if(isSignedIn()) {
                 header("Location: index.php");
                 echo "<div class=\"message\">" . MESSAGE_ALREADY_IN . "</div>";
@@ -20,46 +25,47 @@
                     </script>
                 ";
 
+                if(!CAN_REGISTER)
+                    die(ERROR_DISABLED_REGISTRATION);
                 if(!SECURE)
-                    echo '<center><div style="color:red;"><b>Warning:</b> Development mode is enabled. Be sure not to reuse a password while it is enabled, because the site may not be secured.</div></center><br><br>';
+                    echo '<center><div style="color:red;"><b>Warning:</b> Development mode is enabled. Be sure not to reuse a password, because the site may not be secured properly.</div></center><br>';
+
                 if($_SERVER['REQUEST_METHOD'] == "POST") {
                     if(!(isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirm_password']))) {
-                        echo $form . "<br><div class=\"error\">" . ERROR_FIELDS_EMPTY . "</div>";
+                        echo error(ERROR_FIELDS_EMPTY);
                     } else {
                         $username = $_POST['username'];
                         $email = $_POST['email'];
                         $password = $_POST['password'];
                         $confirm_password = $_POST['confirm_password'];
 
-                        if(!CAN_REGISTER)
-                            die(ERROR_DISABLED_REGISTRATION);
                         if(strlen($password) < 6) {
-                            echo $form . "<br><div class=\"error\">" . ERROR_SHORT_PASSWORD . "</div>"; // TODO: Make function that errors, so I don't need to repeat all that so  much
+                            echo error(ERROR_SHORT_PASSWORD);
                         } else {
                             if(strlen($username) < 4 || strlen($username) > 20) {
-                                echo $form . "<br><div class=\"error\">" . ERROR_SHORT_USERNAME . "</div>";
+                                echo error(ERROR_SHORT_USERNAME);
                             } else {
                                 if(!isUsernameValid($username)) {
-                                    echo $form . "<br><div class=\"error\">" . ER4ROR_USERNAME_INVALID. "</div>";
+                                    echo error(ERROR_USERNAME_INVALID);
                                 } else {
                                     if($password != $confirm_password) {
-                                        echo $form . "<br><div class=\"error\">" . ERROR_PASSWORD_MATCH . "</div>";
+                                        echo error(ERROR_PASSWORD_MATCH);
                                     } else {
                                         if(!isPasswordSecure($password) || $password == $username) {
-                                            echo $form . "<br><div class=\"error\">" . ERROR_PASSWORD_WEAK . "</div>";
+                                            echo error(ERROR_PASSWORD_WEAK);
                                         } else {
                                             if(!isEmailValid($email) || strlen($email) > 254) { // max email address length is 254
-                                                echo $form . "<br><div class=\"error\">" . ERROR_EMAIL_INVALID . "</div>";
+                                                echo error(ERROR_EMAIL_INVALID);
                                             } else {
                                                 if(usernameExists($username)) {
-                                                    echo $form . "<br><div class=\"error\">" . ERROR_USERNAME_TAKEN . "</div>";
+                                                    echo error(ERROR_USERNAME_TAKEN);
                                                 } else {
                                                     if(emailExists($email)) {
-                                                        echo $form . "<br><div class=\"error\">" . ERROR_EMAIL_TAKEN . "</div>";
+                                                        echo error(ERROR_EMAIL_TAKEN);
                                                     } else { // TODO: Check for brute forcing
                                                        register($username, $email, $password);
                                                        login($username, $password);
-                                                       header("Location: index.php");
+                                                       header("Location: " . toAbsoluteURL('index.php'));
                                                        echo "<script>window.location.replace(\"index.php\");</script>";
                                                        die();
                                                     }

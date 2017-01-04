@@ -5,7 +5,7 @@ sec_session_start();
 
 /* returns a new mysqli object */
 function getConnection() {
-    return new mysqli(HOST, USER, PASSWORD, DATABASE);
+    return new mysqli(DATABASE_HOST, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME);
 }
 
 /* returns a boolean; whether or not the user is signed in */
@@ -30,6 +30,11 @@ function sec_session_start() {
 
     if(gone($_SESSION['csrf']))
         generateCSRFToken();
+}
+
+/* returns the absolute url if possible */
+function toAbsoluteURL($relative) {
+    return ((!gone(HTTPS) ? 'https' : 'http') . '://' . (!gone(SITE) ? SITE : (!gone($_SERVER['HTTP_HOST']) ? (!gone($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME']) : 'localhost')) . (substr($request, 0, 1) !== '/' ? '/' : '') . $request);
 }
 
 /* registers a new user */
