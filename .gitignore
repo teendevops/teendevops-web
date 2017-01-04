@@ -1,5 +1,6 @@
 includes/config.php
 config.php
+config.php.backup
 
 push.sh
 start.sh
