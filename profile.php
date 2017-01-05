@@ -22,7 +22,7 @@
                     <center>
                         <img src="assets/user-icons/default.png">
                         <h1><a href="profile.php?id=<?php echo $user['id']; ?>"><?php echo htmlspecialchars($user['username']); ?></a></h1>
-                        <h2><?php echo htmlspecialchars(NAME) . " " . $user['rank_html'] ?>
+                        <h2><?php echo htmlspecialchars(NAME) . " " . $user['rank_html'] ?></h2>
                         <h2 class="lang"><?php
                             $language = $user['languages'];
                             if(empty($language) || $language == "None") {
