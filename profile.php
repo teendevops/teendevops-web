@@ -24,6 +24,8 @@
                         <h1><a href="profile.php?id=<?php echo $user['id']; ?>"><?php echo htmlspecialchars($user['username']); ?></a></h1>
                         <h2><?php echo htmlspecialchars(NAME) . " " . $user['rank_html'] ?></h2>
                         <h2 class="lang"><?php
+                            $print = isSignedIn() && ($_SESSION['rank'] != 0 || ($user['id'] == $_SESSION['id']));
+
                             $language = $user['languages'];
                             if(empty($language) || $language == "None") {
                                 echo "Language Unspecified";
@@ -31,7 +33,7 @@
                                 echo htmlspecialchars($language) . " Developer";
                             }
 
-                            echo "</h2>" . $edit;
+                            echo "</h2>" . ($print ? $edit : '');
                         ?>
                     </center>
                 </div>
@@ -41,7 +43,7 @@
                         <div class="aboutme">
                             <?php
                                 echo "<h3>" . htmlspecialchars($user['description']) . "</h3>";
-                                if($user['id'] == $_SESSION['id'])
+                                if($print)
                                     echo $edit;
                             ?>
                         </div>

@@ -1,8 +1,7 @@
 <?php
     include "../../../includes/functions.php";
 
-    sec_session_start();
-    header("Content-Type: text/plain");
+    header("Content-Type: application/json");
 
     $json = array();
     $json['success'] = false;
