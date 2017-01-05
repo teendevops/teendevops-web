@@ -1,0 +1,2 @@
+Require all denied
+ErrorDocument 403 /403.html
