@@ -41,16 +41,9 @@ function toAbsoluteURL($relative) {
 function register($username, $email, $password) {
     $mysqli = getConnection();
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null')");
+    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`, `rank`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0')");
     $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
     $stmt->execute();
-
-    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=? OR `email`=?");
-    $stmt->bind_param('ss', $username, $email);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n); // is this even needed?
-    $stmt->fetch();
 }
 
 /* returns an array with information about the given user */
@@ -61,7 +54,7 @@ function getUser($id) {
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);
     $stmt->fetch();
 
     $user = array();
@@ -69,6 +62,8 @@ function getUser($id) {
     $user['username'] = $username_n;
     $user['email'] = $email_n;
     $user['name'] = $name_n;
+    $user['rank'] = $rank_n;
+    $user['rank_html'] = htmlspecialchars(getRank($rank_n));
     $user['banned'] = $banned_n;
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
@@ -85,7 +80,7 @@ function getUserByName($id) {
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);
     $stmt->fetch();
 
     $user = array();
@@ -93,6 +88,7 @@ function getUserByName($id) {
     $user['username'] = $username_n;
     $user['email'] = $email_n;
     $user['name'] = $name_n;
+    $user['rank'] = $rank_n;
     $user['banned'] = $banned_n;
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
@@ -134,7 +130,7 @@ function login($username_or_email, $password_real) {
     $stmt->execute() or die("Error: Failed to select user");
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location) or die("Error: Failed to bind params second time");
+    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location, $rank) or die("Error: Failed to bind params second time");
     while ($stmt->fetch() ) {
         if(isBruteForcing($id, MAX_LOGIN_ATTEMPTS)) {
             return 4;
@@ -151,6 +147,8 @@ function login($username_or_email, $password_real) {
                 $_SESSION['html_username'] = htmlspecialchars($username);
                 $_SESSION['email'] = $email;
                 $_SESSION['html_email'] = htmlspecialchars($email);
+                $_SESSION['rank'] = $rank;
+                $_SESSION['rank_html'] = htmlspecialchars(getRank($rank));
                 $_SESSION['banned'] = $banned;
                 $_SESSION['name'] = $name;
                 $_SESSION['signed_in'] = true;
@@ -173,10 +171,22 @@ function login($username_or_email, $password_real) {
     return 3; // unknown error
 }
 
+/* convert rank to string */
+function getRank($rank) {
+    if($rank == 0)
+        return 'User';
+    if($rank == 1)
+        return 'Moderator';
+    if($rank == 2)
+        return 'Admin';
+
+    return 'User';
+}
+
 /* store the login attempt */
 function loginAttempt($mysqli, $id, $success) {
     $sc = ($success) ? 'true' : 'false';
-    $forwarded = (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] !== NULL) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : "undefined";
+    $forwarded = (gone($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] !== NULL) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : "undefined";
     $stmt = $mysqli->prepare("INSERT INTO `login_attempts` (`id`, `time`, `ip`, `insecure_ip`, `success`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)") or die("Error: Failed to prepare statement @ login_attempts");
     $stmt->bind_param('isss', $id, $_SERVER['REMOTE_ADDR'], $forwarded, $sc) or die("Error: Failed to login bind param.");
 
@@ -262,7 +272,7 @@ function getUsersByLanguage($language) {
     $stmt->execute();
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location);
+    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location, $rank);
     while ($stmt->fetch()) {
         $arr[] = array(
             "id"=>$id,
@@ -271,7 +281,8 @@ function getUsersByLanguage($language) {
             "banned"=>$banned,
             "description"=>$description,
             "location"=>$location,
-            "language"=>$languages
+            "language"=>$languages,
+            "rank"=>$rank
         );
     }
 
