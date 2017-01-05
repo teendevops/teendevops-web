@@ -148,7 +148,7 @@ function login($username_or_email, $password_real) {
                 $_SESSION['email'] = $email;
                 $_SESSION['html_email'] = htmlspecialchars($email);
                 $_SESSION['rank'] = $rank;
-                $_SESSION['rank_html'] = htmlspecialchars(getRank($rank));
+                $_SESSION['rank_html'] = htmlspecialchars(getRank($rank)); // later refactor this variable... rename.
                 $_SESSION['banned'] = $banned;
                 $_SESSION['name'] = $name;
                 $_SESSION['signed_in'] = true;
@@ -191,6 +191,35 @@ function loginAttempt($mysqli, $id, $success) {
     $stmt->bind_param('isss', $id, $_SERVER['REMOTE_ADDR'], $forwarded, $sc) or die("Error: Failed to login bind param.");
 
     $stmt->execute() or die("Error: Failed to execute query");
+}
+
+/* for the admin panel: prints the recent login attempts */
+function printLoginAttempts($limit) {
+    $mysqli = getConnection();
+	$stmt = $mysqli->prepare("SELECT * FROM `login_attempts` LIMIT " . $limit); // ik, sql injection. No user-supplied input tho.
+    $stmt->execute();
+
+    $stmt->store_result();
+    $stmt->bind_result($id, $time, $ip, $insecure_ip, $success);
+    echo '<table class="table table-striped"><thead><tr>
+            <th>Time</th>
+            <th>ID</th>
+            <th>Success</th>
+            <th>IP</th>
+            <th>Insecure IP</th>
+          </tr></thead><tbody>';
+    while ($stmt->fetch() ) {
+        echo '
+        <tr ' . ($success ? 'style="background-color:#11CE00;"' : 'style="background-color:#FF0000;"') .'>
+            <td>' . htmlspecialchars($time) . '</td>
+            <td><a href="/profile.php?id=' . htmlspecialchars($id) . '">' . htmlspecialchars($id) . '</a></td>
+            <td>' . htmlspecialchars($success) . '</td>
+            <td>' . htmlspecialchars($ip) . '</td>
+            <td>' . htmlspecialchars($insecure_ip) . '</td>
+        </tr>
+        ';
+    }
+    echo '</table></tbody>';
 }
 
 /* returns a boolean; whether or not a user is being brute forced */

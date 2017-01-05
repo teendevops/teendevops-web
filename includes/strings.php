@@ -2,6 +2,7 @@
 
 define("ERROR_FIELDS_EMPTY", "Error: All fields must be filled out.");
 define("ERROR_UNKNOWN_STATE", "Error: An unknown error occured.");
+define("ERROR_PERMISSION_DENIED", "Error: You don't have permission to view this page.");
 define("ERROR_SHORT_PASSWORD", "Error: Passwords must be more than 6 characters.");
 define("ERROR_SHORT_USERNAME", "Error: Usernames must be more than 5 characters and less than 20.");
 define("ERROR_DISABLED_REGISTRATION", "Error: Sorry, but registration is temporarily disabled.");
@@ -24,5 +25,6 @@ define("SHORT_USER_CREATE", "Register");
 define("SHORT_USER_PROFILE", "<span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span> Profile");
 define("SHORT_USER_SETTINGS", "<span class=\"glyphicon glyphicon-cog\" aria-hidden=\"true\"></span> Settings");
 define("SHORT_USER_LOGOUT", "<span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"></span> Logout");
+define("SHORT_USER_MODERATE", "Moderate");
 
 ?>

@@ -45,6 +45,13 @@
                                     <li><a href="settings.php">' . SHORT_USER_SETTINGS . '</a></li>
                                     <li><a href="logout.php?csrf=' . getCSRFToken() . '">' . SHORT_USER_LOGOUT . '</a></li>
                                 ';
+                                if($_SESSION['rank'] != 0) {
+                                    echo '<li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">' . SHORT_USER_MODERATE . ' <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="admin/attempts.php">Login Attempts</a></li>
+                </ul></li>';
+                                }
                             } else {
                                 if(CAN_LOGIN)
                                     echo "<li><a href=\"login.php\">" . SHORT_USER_LOGIN . "</a></li>";
