@@ -1,7 +1,7 @@
 <?php
 
 /* MAIN CONFIGURATION */
-define("NAME", "codeday-team"); // The name of the site
+define("NAME", "teendevops"); // The name of the site
 define("SITE", ""); // the public-facing domain or IP address, if any
 define("HTTPS", false); // enable if host is using https protocol rather than http
 define("SECURE", false); // FOR DEVELOPMENT ONLY! Set to false for development mode
