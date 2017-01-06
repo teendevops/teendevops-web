@@ -196,11 +196,11 @@ function loginAttempt($mysqli, $id, $success) {
 /* for the admin panel: prints the recent login attempts */
 function printLoginAttempts($limit) {
     $mysqli = getConnection();
-	$stmt = $mysqli->prepare("SELECT * FROM `login_attempts` LIMIT " . $limit); // ik, sql injection. No user-supplied input tho.
+	$stmt = $mysqli->prepare("SELECT login_attempts.*, users.username FROM `login_attempts` INNER JOIN `users` ON login_attempts.id=users.id LIMIT " . $limit); // ik, sql injection. No user-supplied input tho.
     $stmt->execute();
 
     $stmt->store_result();
-    $stmt->bind_result($id, $time, $ip, $insecure_ip, $success);
+    $stmt->bind_result($id, $time, $ip, $insecure_ip, $success, $username);
     echo '<table class="table table-striped"><thead><tr>
             <th>Time</th>
             <th>ID</th>
@@ -210,9 +210,9 @@ function printLoginAttempts($limit) {
           </tr></thead><tbody>';
     while ($stmt->fetch() ) {
         echo '
-        <tr ' . ($success ? 'style="background-color:#11CE00;"' : 'style="background-color:#FF0000;"') .'>
+        <tr ' . ($success == 'true' ? 'style="background-color:#11CE00;"' : 'style="background-color:#FF0000;"') .'>
             <td>' . htmlspecialchars($time) . '</td>
-            <td><a href="/profile.php?id=' . htmlspecialchars($id) . '">' . htmlspecialchars($id) . '</a></td>
+            <td><a href="/profile.php?id=' . htmlspecialchars($id) . '">' . htmlspecialchars($username) . '</a></td>
             <td>' . htmlspecialchars($success) . '</td>
             <td>' . htmlspecialchars($ip) . '</td>
             <td>' . htmlspecialchars($insecure_ip) . '</td>
