@@ -1,7 +1,6 @@
 <?php
 include "../../../includes/functions.php";
     
-    sec_session_start();
     header("Content-Type: text/plain");
 
     $json = array();

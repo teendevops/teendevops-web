@@ -194,14 +194,14 @@ function loginAttempt($mysqli, $id, $success) {
 }
 
 /* for the admin panel: prints the recent login attempts */
-function printLoginAttempts($limit) {
+function printLoginAttempts($limit, $filter) { // warning: filter does not sanitize input; do not set it to user supplied input.
     $mysqli = getConnection();
-	$stmt = $mysqli->prepare("SELECT login_attempts.*, users.username FROM `login_attempts` INNER JOIN `users` ON login_attempts.id=users.id LIMIT " . $limit); // ik, sql injection. No user-supplied input tho.
+	$stmt = $mysqli->prepare("SELECT login_attempts.*, users.username FROM `login_attempts`" . $filter . " INNER JOIN `users` ON login_attempts.id=users.id LIMIT " . $limit); // ik, sql injection. No user-supplied input tho.
     $stmt->execute();
 
     $stmt->store_result();
     $stmt->bind_result($id, $time, $ip, $insecure_ip, $success, $username);
-    echo '<table class="table table-striped"><thead><tr>
+    echo '<div class="container"><table class="table table-striped"><thead><tr>
             <th>Time</th>
             <th>ID</th>
             <th>Success</th>
@@ -213,13 +213,13 @@ function printLoginAttempts($limit) {
         <tr ' . ($success == 'true' ? 'style="background-color:#11CE00;"' : 'style="background-color:#FF0000;"') .'>
             <td>' . htmlspecialchars($time) . '</td>
             <td><a href="/profile.php?id=' . htmlspecialchars($id) . '">' . htmlspecialchars($username) . '</a></td>
-            <td>' . htmlspecialchars($success) . '</td>
+            <td><a href="/admin/attempts.php?filter=true">' . htmlspecialchars($success) . '</a></td>
             <td>' . htmlspecialchars($ip) . '</td>
             <td>' . htmlspecialchars($insecure_ip) . '</td>
         </tr>
         ';
     }
-    echo '</table></tbody>';
+    echo '</tbody></table></div>';
 }
 
 /* returns a boolean; whether or not a user is being brute forced */
@@ -298,6 +298,33 @@ function getUsersByLanguage($language) {
 
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `languages`=? AND `banned`='false' LIMIT 20") or die("Error: Failed to prepare query.");
 	$stmt->bind_param("s", $language);
+    $stmt->execute();
+
+    $stmt->store_result();
+    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location, $rank);
+    while ($stmt->fetch()) {
+        $arr[] = array(
+            "id"=>$id,
+            "username"=>$username,
+            "name"=>$name,
+            "banned"=>$banned,
+            "description"=>$description,
+            "location"=>$location,
+            "language"=>$languages,
+            "rank"=>$rank
+        );
+    }
+
+    return $arr;
+}
+
+/* Returns the past 500 users. TODO: Make function more flexible and have more features */
+function getUsers() {
+    $arr = array();
+
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+
+    $stmt = $mysqli->prepare("SELECT * FROM `users` LIMIT 500") or die("Error: Failed to prepare query.");
     $stmt->execute();
 
     $stmt->store_result();
