@@ -50,6 +50,7 @@
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">' . SHORT_USER_MODERATE . ' <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="/admin/attempts.php">Login Attempts</a></li>
+                  <li><a href="/admin/users.php">Users</a></li>
                 </ul></li>';
                                 }
                             } else {
