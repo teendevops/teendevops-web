@@ -137,6 +137,9 @@ function login($username_or_email, $password_real) {
             loginAttempt($mysqli, $id, $success);
 
             if($success) {
+                session_regenerate_id(true);
+                sec_session_start();
+
                 generateCSRFToken();
                 $_SESSION['id'] = $id;
                 $_SESSION['username'] = $username;
