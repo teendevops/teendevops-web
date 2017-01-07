@@ -75,12 +75,12 @@ transform:scale(1.5,1.0);
         <pre style="color:#0f0;">
 $ git pull -v
 <?php
-echo shell_exec("sudo -u $USER /usr/bin/git pull -v 2>&1");
+echo htmlspecialchars(shell_exec("sudo -u $USER /usr/bin/git pull -v 2>&1"));
 ?>
 
 $ sh syntax.sh
 <?php
-echo shell_exec("sudo -S true && sudo -u $USER /usr/bin/sh syntax.sh 2>&1");
+echo htmlspecialchars(shell_exec("sudo -S true && sudo -u $USER /usr/bin/sh syntax.sh 2>&1"));
 ?>
 
 $ <span class="blinking-cursor">|</span></pre>
