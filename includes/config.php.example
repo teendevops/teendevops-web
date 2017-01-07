@@ -10,7 +10,7 @@ define("SECURE", false); // FOR DEVELOPMENT ONLY! Set to false for development m
 define("DATABASE_HOST", "localhost");
 define("DATABASE_USER", "");
 define("DATABASE_PASSWORD", "");
-define("DATABASE_NAME", "codeday-team");
+define("DATABASE_NAME", "codeday-team"); // todo:change
 
 /* LOGIN AND REGISTRATION CONFIGURATION */
 define("CAN_LOGIN", true);
@@ -21,7 +21,7 @@ define("MAX_LOGIN_ATTEMPTS", 10);
 define("LOGIN_ATTEMPT_TIMEOUT", 2); // in hours
 
 /* COOKIE CONFIGURATION */
-define("SESSION_ID_NAME", "cdt_session_id");
+define("SESSION_ID_NAME", NAME . "_session");
 
 /* MISC CONFIGURATION */
 define("EASTER_EGGS", true);

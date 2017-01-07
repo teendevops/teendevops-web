@@ -15,16 +15,13 @@ function isSignedIn() {
 
 /* securely starts a new session */
 function sec_session_start() {
-    $session_name = SESSION_ID_NAME;
-    $secure = false; // true if https
-    $httponly = true;
     $cookieParams = session_get_cookie_params();
-    session_set_cookie_params($cookieParams["lifetime"],
+    session_set_cookie_params($cookieParams["lifetime"] + (60 * 60), // 1 hr extention
                               $cookieParams["path"],
                               $cookieParams["domain"],
-                             $secure,
-                             $httponly);
-    session_name($session_name);
+                             HTTPS, // secure
+                             true); // httponly
+    session_name(SESSION_ID_NAME);
 
     session_start();
 
@@ -63,7 +60,6 @@ function getUser($id) {
     $user['email'] = $email_n;
     $user['name'] = $name_n;
     $user['rank'] = $rank_n;
-    $user['rank_html'] = htmlspecialchars(getRank($rank_n));
     $user['banned'] = $banned_n;
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
