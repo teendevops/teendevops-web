@@ -7,7 +7,7 @@
         header("X-Easter-Egg: You found an easter egg! id=e4st3r_egg_5");
     }
     header("X-XSS-Protection: 1; mode=block"); // force browser xss protection
-    header("X-Frame-Options: SAMEORIGIN"); // prevent clickjacking attacks
+    header("X-Frame-Options: ALLOW-FROM http://teendevops.net"); // prevent clickjacking attacks
     header("X-Content-Type-Options: nosniff"); // prevent mime-type sniffing
 
     if(!SECURE) {
