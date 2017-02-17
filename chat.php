@@ -58,7 +58,9 @@
                    url:urlx,
                    type:'GET',
                    success: function(data){
-                       document.getElementById("chatWindow").innerHTML = data;
+                       var chatWindow = document.getElementById("chatWindow");
+                       chatWindow.innerHTML = data;
+                       chatWindow.scrollTop = chatWindow.scrollHeight;
                    }
                 });
             }
