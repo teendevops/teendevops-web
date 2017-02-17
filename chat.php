@@ -59,8 +59,12 @@
                    type:'GET',
                    success: function(data){
                        var chatWindow = document.getElementById("chatWindow");
+                       var oldInnerHTML = chatWindow.innerHTML;
+                       
                        chatWindow.innerHTML = data;
-                       chatWindow.scrollTop = chatWindow.scrollHeight;
+                       
+                       if(oldInnerHTML != data)
+                           chatWindow.scrollTop = chatWindow.scrollHeight;
                    }
                 });
             }
