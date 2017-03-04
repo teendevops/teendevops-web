@@ -1,5 +1,6 @@
 <?php
 include "config.php";
+include_once "strings.php";
 
 sec_session_start();
 

@@ -1,6 +1,5 @@
 <?php
     include_once "includes/functions.php";
-    include_once "includes/strings.php";
 
     if(EASTER_EGGS) {
         //header(base64_decode("SGVsbG8hIEknZCBsb3ZlIHRvIGNoYXQgc29tZSB0aW1lLiBGZWVsIGZyZWUgdG8gc2hvb3QgbWUgYW4gZW1haWwgYXQgbWVAYXJpbmVycm9uLmNvbSA6KQ==")); // if something goes wrong, blame it on Arav :P

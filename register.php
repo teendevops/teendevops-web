@@ -1,3 +1,8 @@
+<?php
+if($_SERVER['REQUEST_METHOD'] == "POST")
+    session_regenerate_id();
+?>
+
 <html>
     <?php include "header.php"; ?>
 
