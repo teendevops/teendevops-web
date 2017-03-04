@@ -59,15 +59,11 @@
                    type:'GET',
                    success: function(data){
                        var wind = document.getElementById("chatWindow");
-                       var scroll = false;
 
-                       if(data != wind.innerHTML)
-                           scroll = true;
-
-                       wind.innerHTML = data;
-
-                       if(scroll)
-                           wind.scrollTop = wind.scrollHeight;
+                       if(data != wind.innerHTML) {
+                            wind.innerHTML = data;
+                            wind.scrollTop = wind.scrollHeight;
+                       }
                    }
                 });
             }
