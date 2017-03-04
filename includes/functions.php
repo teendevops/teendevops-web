@@ -74,7 +74,7 @@ function getUserByName($id) {
     $mysqli = getConnection();
 
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=?");
-    $stmt->bind_param('i', $id);
+    $stmt->bind_param('s', $id);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);

@@ -7,21 +7,20 @@
             <?php
                 $edit = "<a href=\"/settings/\"><div class=\"edit\"><span class=\"glyphicon glyphicon-pencil\"></span> edit</div></a>";
 
-                if(!empty($_GET['id']))
-                    $user = getUser($_GET['id']);
-                else {
-                    if(isSignedIn()) {
-                        $user = getUser($_SESSION['id']);
-                    } else {
-                        echo "Invalid parameters. Redirecting to index...<script>window.location.replace(\"/\");</script>";
-                    }
-                }
+                if(!empty($_GET['username']))
+                    $user = getUserByName(explode(".", $_GET['username'], 2)[0]);
+                else if(!gone($_GET['id']))
+                    $user = getUser(explode(".", $_GET['id'], 2)[0]);
+                else if(isSignedIn())
+                    $user = getUserByName($_SESSION['username']);
+                else
+                    echo "Invalid parameters. Redirecting to index...<script>window.location.replace(\"/\");</script>";
             ?>
             <div class="row">
                 <div class="col-sm-3">
                     <center>
                         <img src="/assets/user-icons/default.png">
-                        <h1><a href="/profile/?id=<?php echo $user['id']; ?>"><?php echo htmlspecialchars($user['username']); ?></a></h1>
+                        <h1><a href="/profile/<?php echo htmlspecialchars($user['username']); ?>/"><?php echo htmlspecialchars($user['username']); ?></a></h1>
                         <h2><?php echo htmlspecialchars(NAME) . " " . $user['rank_html'] ?></h2>
                         <h2 class="lang"><?php
                             $href = ($user['id'] == $_SESSION['id']);
