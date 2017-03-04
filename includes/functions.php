@@ -225,7 +225,7 @@ function printLoginAttempts($limit, $filter) { // warning: filter does not sanit
 /* returns a boolean; whether or not a user is being brute forced */
 function isBruteForcing($id, $tops) {
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
-	$stmt = $mysqli->prepare("SELECT `time` FROM `login_attempts` WHERE `id`=? OR `ip`=? AND `time`>(NOW() - INTERVAL 1 HOUR) AND `success`='false'");
+	$stmt = $mysqli->prepare("SELECT * FROM `login_attempts` WHERE `time`>(NOW() - INTERVAL 1 HOUR) AND `success`='false' AND `id`=? OR `ip`=? AND `success`='false'");
 	$stmt->bind_param ('is', $id, $_SERVER['REMOTE_ADDR']);
 	$stmt->execute() or die("Error: Failed to execute brute forcing query");
 	$stmt->store_result();
