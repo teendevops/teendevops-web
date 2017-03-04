@@ -3,7 +3,7 @@
         include "header.php";
 
         if(!isSignedIn()) {
-            echo "Please login! <script>window.location.replace(\"login.php?return=chat\");</script></html>";
+            echo "Please login! <script>window.location.replace(\"login/?return=chat\");</script></html>";
             die();
         }
     ?>
@@ -24,7 +24,7 @@
                         $array = getChannels();
 
                         foreach($array as $channel) {
-                            echo "<a href=\"chat.php?channel=" . $channel['id'] . "\">" . htmlspecialchars($channel['title']) . "</a><br>";
+                            echo "<a href=\"chat/?channel=" . $channel['id'] . "\">" . htmlspecialchars($channel['title']) . "</a><br>";
                         }
                     ?>
                 </div>
@@ -49,9 +49,9 @@
             function refetch() {
                 var urlx = <?php
                     if($there) {
-                        echo '"htmlchat.php?channel=' . preg_replace("/[^0-9]/", "", $_GET['channel']) .  '"';
+                        echo '"htmlchat/?channel=' . preg_replace("/[^0-9]/", "", $_GET['channel']) .  '"';
                     } else {
-                        echo '"htmlchat.php?channel=1"';
+                        echo '"htmlchat/?channel=1"';
                     }
                 ?>;
                 $.ajax({

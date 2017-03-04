@@ -13,7 +13,7 @@
                     if(isSignedIn()) {
                         $user = getUser($_SESSION['id']);
                     } else {
-                        echo "Invalid parameters. Redirecting to index...<script>window.location.replace(\"index.php\");</script>";
+                        echo "Invalid parameters. Redirecting to index...<script>window.location.replace(\"index/\");</script>";
                     }
                 }
             ?>
@@ -21,7 +21,7 @@
                 <div class="col-sm-3">
                     <center>
                         <img src="assets/user-icons/default.png">
-                        <h1><a href="profile.php?id=<?php echo $user['id']; ?>"><?php echo htmlspecialchars($user['username']); ?></a></h1>
+                        <h1><a href="profile/?id=<?php echo $user['id']; ?>"><?php echo htmlspecialchars($user['username']); ?></a></h1>
                         <h2><?php echo htmlspecialchars(NAME) . " " . $user['rank_html'] ?></h2>
                         <h2 class="lang"><?php
                             $print = isSignedIn() && ($_SESSION['rank'] != 0 || ($user['id'] == $_SESSION['id']));

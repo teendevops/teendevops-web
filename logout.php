@@ -9,5 +9,5 @@ else {
 }
 ?>
 <html>
-<script>window.location.replace("index.php");</script>
+<script>window.location.replace("index/");</script>
 </html>

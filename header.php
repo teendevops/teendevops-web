@@ -30,7 +30,7 @@
     <nav>
         <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container-fluid">
-                <div class="navbar-header"><a class="navbar-brand" href="index.php" style="font-family: monospace !important"><?php echo $sitename; if(!SECURE) echo ' / <b style="color:red;">development mode</b>';?></a>
+                <div class="navbar-header"><a class="navbar-brand" href="/" style="font-family: monospace !important"><?php echo $sitename; if(!SECURE) echo ' / <b style="color:red;">development mode</b>';?></a>
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-menubuilder"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                     </button>
                 </div>
@@ -40,9 +40,9 @@
 			                // header("Content-Security-Policy: script-src 'self'"); // commented out because it is annoying to configure and I don't have time right now.
                             if(isSignedIn()) {
                                 echo '
-                                    <li><a href="/profile.php?id=' . $_SESSION['id'] . '">' . SHORT_USER_PROFILE . '</a></li>
-                                    <li><a href="/settings.php">' . SHORT_USER_SETTINGS . '</a></li>
-                                    <li><a href="/logout.php?csrf=' . getCSRFToken() . '">' . SHORT_USER_LOGOUT . '</a></li>
+                                    <li><a href="/profile/?id=' . $_SESSION['id'] . '">' . SHORT_USER_PROFILE . '</a></li>
+                                    <li><a href="/settings/">' . SHORT_USER_SETTINGS . '</a></li>
+                                    <li><a href="/logout/?csrf=' . getCSRFToken() . '">' . SHORT_USER_LOGOUT . '</a></li>
                                 ';
                                 if($_SESSION['rank'] != 0) {
                                     echo '<li class="dropdown">
@@ -54,9 +54,9 @@
                                 }
                             } else {
                                 if(CAN_LOGIN)
-                                    echo "<li><a href=\"/login.php\">" . SHORT_USER_LOGIN . "</a></li>";
+                                    echo "<li><a href=\"/login/\">" . SHORT_USER_LOGIN . "</a></li>";
                                 if(CAN_REGISTER)
-                                    echo "<li><a href=\"/register.php\">" . SHORT_USER_REGISTER . "</a></li>";
+                                    echo "<li><a href=\"/register/\">" . SHORT_USER_REGISTER . "</a></li>";
 
                             }
                         ?>
