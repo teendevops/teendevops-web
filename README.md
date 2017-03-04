@@ -2,12 +2,15 @@
 [![Build Status](https://travis-ci.com/Arinerron/codeday-team.svg?token=xRJQhWcuhJai95gtzHzi&branch=master)](https://travis-ci.com/Arinerron/codeday-team)
 
 # About
-The reason why this is called "codeday-team" is because I don't have a name for it yet, and I was developing it for/at CodeDay.  I'll rename when we find a name for it.
+The reason why this was called "codeday-team" is because I didn't have a name for it, and I was developing it for/at CodeDay.  I renamed it when @eviltak found a name for it.
 
 # Live Version
-Thanks to @virtualdxs, we now have a live version here: http://box.k7dxs.xyz/
-
-Please don't reuse a password on the site though, because it is for testing and may not be secure. Also, the page is sent via HTTP and is not encrypted.
+Please don't reuse a password on either of these sites yet. Neither of them use HTTPS, so neither of them are considered fully secure.
+## Production
+- Thanks to @Gwiddle Web Hosting, we now have a prod version here: http://teendevops.net
+## Development
+- Thanks to @virtualdxs, we now have a dev version here: http://box.k7dxs.xyz/
+- You can try your commit by loading http://box.k7dxs.xyz/pull.php
 
 # Installation
 ## Automatically
@@ -24,3 +27,5 @@ Please don't reuse a password on the site though, because it is for testing and 
 # Checking syntax
 1. Execute the script `syntax.sh`
 2. If there is no syntax error, it will return a success message. Otherwise, it will print the error.
+
+[flag](ur-a_r3adme_reader)
