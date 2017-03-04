@@ -212,8 +212,8 @@ function printLoginAttempts($limit, $filter) { // warning: filter does not sanit
         echo '
         <tr ' . ($success == 'true' ? 'style="background-color:#11CE00;"' : 'style="background-color:#FF0000;"') .'>
             <td>' . htmlspecialchars($time) . '</td>
-            <td><a href="/profile.php?id=' . htmlspecialchars($id) . '">' . htmlspecialchars($username) . '</a></td>
-            <td><a href="/admin/attempts.php?filter=true">' . htmlspecialchars($success) . '</a></td>
+            <td><a href="/profile/?id=' . htmlspecialchars($id) . '">' . htmlspecialchars($username) . '</a></td>
+            <td><a href="/admin/attempts/?filter=true">' . htmlspecialchars($success) . '</a></td>
             <td>' . htmlspecialchars($ip) . '</td>
             <td>' . htmlspecialchars($insecure_ip) . '</td>
         </tr>
@@ -469,7 +469,7 @@ function showSimilar() {
                                             <h3>" . $_SESSION['html_languages'] . " Developer</h3>
                                         </center></div>";
                         echo "          <div class=\"col-sm-3\">
-                                            <center><h2><a href=\"profile.php?id=" . $usr['id'] . "\">" . htmlspecialchars($usr['username']) . "</a></h2>
+                                            <center><h2><a href=\"profile/?id=" . $usr['id'] . "\">" . htmlspecialchars($usr['username']) . "</a></h2>
                                             " . htmlspecialchars($usr['description']) . "
                                         </div></center>";
 	            }
@@ -539,5 +539,18 @@ function ctfFlag($id, $flag, $worth) {
     $stmt = $mysqli->prepare("INSERT INTO `flags` (`id`, `flag`, `worth`) VALUES (?, ?, ?)");
     $stmt->bind_param('isi', $id, $flag, $worth);
     $stmt->execute();
+}
+
+/* Dumps the data in an array in the format requested */
+function dump($array) {
+    if(!gone($_REQUEST['format'])) {
+        $type = $_REQUEST['format'];
+        if($type == 'dump') {
+            print_r($array); // phpdump
+            die();
+        }
+    }
+
+    die(json_encode($array)); // json
 }
 ?>

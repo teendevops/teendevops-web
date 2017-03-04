@@ -14,19 +14,19 @@
             $user = getUserByName($_REQUEST['username']);
         else {
             $json['error'] = 'Either parameter `id` or `username` must be set.';
-            die(json_encode($json));
+            dump($json);
         }
 
         if(!gone($user['banned']) && !$user['banned']) {
             $json['success'] = true;
             $json['user'] = $user;
-            die(json_encode($json));
+            dump($json);
         } else {
             $json['error'] = 'That user does not exist.';
-            die(json_encode($json));
+            dump($json);
         }
     } else {
         $json['error'] = 'Request method must be GET.';
-        die(json_encode($json));
+        dump($json);
     }
 ?>

@@ -16,7 +16,7 @@
                           </tr></thead><tbody>';
                     foreach($users as $user) {
                         echo '<tr>
-                        <td><a href="/profile.php?id=' . $user['id'] . '">' . htmlspecialchars($user['username']) . '</td>
+                        <td><a href="/profile/?id=' . $user['id'] . '">' . htmlspecialchars($user['username']) . '</td>
                         <td>' . htmlspecialchars($user['language']) . '
                         <td>' . htmlspecialchars($user['location']) . '
                         <td>' . htmlspecialchars($user['description']) . '
