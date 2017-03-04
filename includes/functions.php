@@ -479,4 +479,65 @@ function showSimilar() {
         }
     }
 }
+
+/* Returns boolean-- whether or not a flag is taken */
+function ctfTaken($id, $flag) {
+    $mysqli = getConnection();
+    $stmt = $mysqli->prepare("SELECT * FROM `flags` WHERE `id`=? AND `flag`=?");
+    $stmt->bind_param('is', $id, $flag);
+    $stmt->execute();
+    $stmt->store_result();
+
+    return $stmt->num_rows != 0;
+}
+
+/* Returns the claimed flags and worth by a user */
+function ctfHistory($id) {
+    $arr = array();
+
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+
+    $stmt = $mysqli->prepare("SELECT * FROM `flags` WHERE `id`=?") or die("Error: Failed to prepare query.");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+
+    $stmt->store_result();
+    $stmt->bind_result($id, $flag, $worth);
+    while ($stmt->fetch()) {
+        $arr[] = array(
+            "id"=>$id,
+            "flag"=>$flag,
+            "worth"=>$worth
+        );
+    }
+
+    return $arr;
+}
+
+/* Returns the balance in tokens of a user */
+function ctfBalance($id) {
+    $balance = 0;
+
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+
+    $stmt = $mysqli->prepare("SELECT * FROM `flags` WHERE `id`=?") or die("Error: Failed to prepare query.");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+
+    $stmt->store_result();
+    $stmt->bind_result($id, $flag, $worth);
+    while ($stmt->fetch()) {
+        $balance = $balance + $worth;
+    }
+
+    return $balance;
+}
+
+/* Add row to flags */
+function ctfFlag($id, $flag, $worth) {
+    $mysqli = getConnection();
+    $stmt = $mysqli->prepare("INSERT INTO `flags` (`id`, `flag`, `worth`) VALUES (?, ?, ?)");
+    $stmt->bind_param('isi', $id, $flag, $worth);
+    $stmt->execute();
+}
 ?>
