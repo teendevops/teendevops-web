@@ -126,7 +126,7 @@ function login($username_or_email, $password_real) {
     $stmt->execute() or die("Error: Failed to select user");
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location, $rank) or die("Error: Failed to bind params second time");
+    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location, $rank);
     while ($stmt->fetch() ) {
         if(isBruteForcing($id, MAX_LOGIN_ATTEMPTS)) {
             return 4;
