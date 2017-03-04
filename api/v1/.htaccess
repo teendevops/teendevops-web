@@ -8,4 +8,5 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]{1,5}|/)$
 RewriteRule (.*)$ /$1/ [R=301,L]
 
-ErrorDocument 404 /api/v1/README.md
+ErrorDocument 404 https://github.com/Arinerron/teendevops/blob/master/api/v1/README.md
+ErrorDocument 403 https://github.com/Arinerron/teendevops/blob/master/api/v1/README.md

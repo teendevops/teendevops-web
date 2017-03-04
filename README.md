@@ -4,6 +4,10 @@
 # About
 The reason why this was called "codeday-team" is because I didn't have a name for it, and I was developing it for/at CodeDay.  I renamed it when @eviltak found a name for it.
 
+# Documentation
+- You can access the REST API documentation in the file [/api/v1/README.md](https://github.com/Arinerron/teendevops/blob/master/api/v1/README.md).
+- The code is documented with comments
+
 # Live Version
 Please don't reuse a password on either of these sites yet. Neither of them use HTTPS, so neither of them are considered fully secure.
 ## Production
