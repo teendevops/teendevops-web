@@ -77,8 +77,8 @@
                    type: "post",
                    data: {
                        csrf: csrf,
-                       msg: msg,
-                       channel: <?php if($there) echo $_GET['channel']; else echo "1"; ?>
+                       message: msg,
+                       channel: <?php if($there) echo preg_replace("/[^0-9]/", "", str_replace(['+', '-'], '', filter_var($_GET['channel'], FILTER_SANITIZE_NUMBER_INT))); else echo "1"; ?>
                    },
                    success: function (response) {
                       // handle the response here

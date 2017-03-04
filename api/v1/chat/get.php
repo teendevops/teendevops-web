@@ -15,6 +15,10 @@
         if($limit > 2500)
         $limit = 2500;
         $arr = getChat($id, $limit, "false");
+        $max = gone($_GET['max']) ? 100 : $_GET['max'];
+        if($max > 2500)
+            $max = 2500;
+        $arr = getChat($id, $max, "false");
         $response = array(
             "success"=>true,
             "channel"=>$_GET['channel'],
