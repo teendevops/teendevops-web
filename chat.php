@@ -3,7 +3,7 @@
         include "header.php";
 
         if(!isSignedIn()) {
-            echo "Please login! <script>window.location.replace(\"login/?return=chat\");</script></html>";
+            echo "Please login! <script>window.location.replace(\"/login/?return=chat\");</script></html>";
             die();
         }
     ?>
@@ -11,7 +11,7 @@
     <script src="js/chat.js" crossorigin="anonymous"></script>
 
     <body>
-        <br>
+        <br><br>
         <div class="container">
             <div class="row">
                 <div class="row">
@@ -58,7 +58,16 @@
                    url:urlx,
                    type:'GET',
                    success: function(data){
-                       document.getElementById("chatWindow").innerHTML = data;
+                       var wind = document.getElementById("chatWindow");
+                       var scroll = false;
+
+                       if(data != wind.innerHTML)
+                           scroll = true;
+
+                       wind.innerHTML = data;
+
+                       if(scroll)
+                           wind.scrollTop = wind.scrollHeight;
                    }
                 });
             }

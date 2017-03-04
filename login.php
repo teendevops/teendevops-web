@@ -54,6 +54,8 @@
 <html>
     <?php include "header.php"; ?>
 
+    <br>
+
     <body>
         <br>
         <?php echo $page; ?>
