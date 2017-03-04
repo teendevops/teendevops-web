@@ -5,7 +5,7 @@
         <br>
         <div class="container">
             <?php
-                $edit = "<a href=\"settings.php\"><div class=\"edit\"><span class=\"glyphicon glyphicon-pencil\"></span> edit</div></a>";
+                $edit = "<a href=\"/settings/\"><div class=\"edit\"><span class=\"glyphicon glyphicon-pencil\"></span> edit</div></a>";
 
                 if(!empty($_GET['id']))
                     $user = getUser($_GET['id']);
@@ -13,15 +13,15 @@
                     if(isSignedIn()) {
                         $user = getUser($_SESSION['id']);
                     } else {
-                        echo "Invalid parameters. Redirecting to index...<script>window.location.replace(\"index/\");</script>";
+                        echo "Invalid parameters. Redirecting to index...<script>window.location.replace(\"/\");</script>";
                     }
                 }
             ?>
             <div class="row">
                 <div class="col-sm-3">
                     <center>
-                        <img src="assets/user-icons/default.png">
-                        <h1><a href="profile/?id=<?php echo $user['id']; ?>"><?php echo htmlspecialchars($user['username']); ?></a></h1>
+                        <img src="/assets/user-icons/default.png">
+                        <h1><a href="/profile/?id=<?php echo $user['id']; ?>"><?php echo htmlspecialchars($user['username']); ?></a></h1>
                         <h2><?php echo htmlspecialchars(NAME) . " " . $user['rank_html'] ?></h2>
                         <h2 class="lang"><?php
                             $print = isSignedIn() && ($_SESSION['rank'] != 0 || ($user['id'] == $_SESSION['id']));

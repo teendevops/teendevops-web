@@ -3,7 +3,7 @@
         include "header.php";
 
         if(!isSignedIn()) {
-            echo "Please login! <script>window.location.replace(\"login/?return=settings\");</script>";
+            echo "Please login! <script>window.location.replace(\"/login/?return=settings\");</script>";
             die();
         }
     ?>
@@ -22,7 +22,7 @@
             }
         ?>
         <br>
-        <form class="form-horizontal" action="settings/" method="post">
+        <form class="form-horizontal" action="/settings/" method="post">
             <fieldset>
 
             <!-- Form Name -->

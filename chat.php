@@ -24,7 +24,7 @@
                         $array = getChannels();
 
                         foreach($array as $channel) {
-                            echo "<a href=\"chat/?channel=" . $channel['id'] . "\">" . htmlspecialchars($channel['title']) . "</a><br>";
+                            echo "<a href=\"/chat/?channel=" . $channel['id'] . "\">" . htmlspecialchars($channel['title']) . "</a><br>";
                         }
                     ?>
                 </div>
@@ -49,9 +49,9 @@
             function refetch() {
                 var urlx = <?php
                     if($there) {
-                        echo '"htmlchat/?channel=' . preg_replace("/[^0-9]/", "", $_GET['channel']) .  '"';
+                        echo '"/htmlchat/?channel=' . preg_replace("/[^0-9]/", "", $_GET['channel']) .  '"';
                     } else {
-                        echo '"htmlchat/?channel=1"';
+                        echo '"/htmlchat/?channel=1"';
                     }
                 ?>;
                 $.ajax({
