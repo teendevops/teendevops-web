@@ -24,7 +24,8 @@
                         <h1><a href="/profile/?id=<?php echo $user['id']; ?>"><?php echo htmlspecialchars($user['username']); ?></a></h1>
                         <h2><?php echo htmlspecialchars(NAME) . " " . $user['rank_html'] ?></h2>
                         <h2 class="lang"><?php
-                            $print = isSignedIn() && ($_SESSION['rank'] != 0 || ($user['id'] == $_SESSION['id']));
+                            $href = ($user['id'] == $_SESSION['id']);
+                            $print = isSignedIn() && ($_SESSION['rank'] != 0 || $href);
 
                             $language = $user['languages'];
                             if(empty($language) || $language == "None") {
@@ -34,6 +35,10 @@
                             }
 
                             echo "</h2>" . ($print ? $edit : '');
+
+                            $ctf = ctfBalance($user['id']);
+                            if(isset($ctf) && $ctf != 0)
+                                echo '<h2>' . ($href ? '<a href="/ctf/">' : '') . $ctf . ' ctf tokens' . ($href ? '</a>' : '') . '</h2>';
                         ?>
                     </center>
                 </div>
