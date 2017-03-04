@@ -40,7 +40,7 @@
                                 echo '<h2>' . ($href ? '<a href="/ctf/">' : '') . $ctf . ' ctf tokens' . ($href ? '</a>' : '') . '</h2>';
                         ?>
                     </center>
-                </div>
+                </div><!-- p1x3l_r0b1n_fl@g -->
                 <div class="col-sm-9">
                     <center>
                         <h2>Description</h2>
