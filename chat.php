@@ -60,7 +60,7 @@
                    success: function(data){
                        var wind = document.getElementById("chatWindow");
 
-                       if(data != wind.innerHTML) {
+                       if(data.localeCompare(wind.innerHTML) != 0) {
                             wind.innerHTML = data;
                             wind.scrollTop = wind.scrollHeight;
                        }
