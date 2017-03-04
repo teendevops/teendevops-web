@@ -23,7 +23,7 @@
                         </tr>';
                     }
                     echo '</tbody></table></div>';
-                    echo '<div class="error">This page is incomplete, and may not be stable! If you are experiencing any issues,</div>';
+                    echo '<div class="error">This page is incomplete, and may not be stable! If you are experiencing any issues, please report them to the devs.</div>';
                 } else {
                     die('<div class="error">' . ERROR_PERMISSION_DENIED . '</div>');
                 }

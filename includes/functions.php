@@ -196,7 +196,7 @@ function loginAttempt($mysqli, $id, $success) {
 /* for the admin panel: prints the recent login attempts */
 function printLoginAttempts($limit, $filter) { // warning: filter does not sanitize input; do not set it to user supplied input.
     $mysqli = getConnection();
-	$stmt = $mysqli->prepare("SELECT login_attempts.*, users.username FROM `login_attempts`" . $filter . " INNER JOIN `users` ON login_attempts.id=users.id LIMIT " . $limit); // ik, sql injection. No user-supplied input tho.
+	$stmt = $mysqli->prepare("SELECT login_attempts.*, users.username FROM `login_attempts` INNER JOIN `users` ON login_attempts.id=users.id" . $filter . " LIMIT " . $limit); // ik, sql injection. No user-supplied input tho.
     $stmt->execute();
 
     $stmt->store_result();
@@ -456,7 +456,7 @@ function isUsernameValid($str) {
 
 /* prints similar devs */
 function showSimilar() {
-    if(isSignedIn()) {
+    if(isSignedIn() && $_SESSION['languages'] != 'None') {
         $array = getUsersByLanguage($_SESSION['languages']);
 
         if(sizeof($array) - 1 > 0) {

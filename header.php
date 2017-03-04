@@ -3,7 +3,7 @@
     include_once "includes/strings.php";
     if(EASTER_EGGS) {
         //header(base64_decode("SGVsbG8hIEknZCBsb3ZlIHRvIGNoYXQgc29tZSB0aW1lLiBGZWVsIGZyZWUgdG8gc2hvb3QgbWUgYW4gZW1haWwgYXQgbWVAYXJpbmVycm9uLmNvbSA6KQ==")); // if something goes wrong, blame it on Arav :P
-        header("X-Easter-Egg: You found an easter egg! id=e4st3r_egg_5");
+        header("X-Easter-Egg: You found an easter egg: e4st3r_egg_5");
     }
     header("X-XSS-Protection: 1; mode=block"); // force browser xss protection
     header("X-Frame-Options: ALLOW-FROM http://teendevops.net"); // prevent clickjacking attacks
@@ -37,21 +37,21 @@
                 <div class="collapse navbar-collapse navbar-menubuilder">
                     <ul class="nav navbar-nav navbar-left">
                         <?php
-			                // header("Content-Security-Policy: script-src 'self'"); // commented out because it is annoying to configure and I don't have time right now.
                             if(isSignedIn()) {
                                 echo '
                                     <li><a href="/profile/?id=' . $_SESSION['id'] . '">' . SHORT_USER_PROFILE . '</a></li>
                                     <li><a href="/settings/">' . SHORT_USER_SETTINGS . '</a></li>
-                                    <li><a href="/logout/?csrf=' . getCSRFToken() . '">' . SHORT_USER_LOGOUT . '</a></li>
                                 ';
                                 if($_SESSION['rank'] != 0) {
                                     echo '<li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">' . SHORT_USER_MODERATE . ' <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="/admin/attempts.php">Login Attempts</a></li>
-                  <li><a href="/admin/users.php">Users</a></li>
-                </ul></li>';
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">' . SHORT_USER_MODERATE . ' <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                          <li><a href="/admin/attempts/">Login Attempts</a></li>
+                                          <li><a href="/admin/users/">Users</a></li>
+                                        </ul></li>';
                                 }
+
+                                echo '<li><a href="/logout/?csrf=' . getCSRFToken() . '">' . SHORT_USER_LOGOUT . '</a></li>';
                             } else {
                                 if(CAN_LOGIN)
                                     echo "<li><a href=\"/login/\">" . SHORT_USER_LOGIN . "</a></li>";
