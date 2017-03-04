@@ -26,5 +26,6 @@ define("SHORT_USER_PROFILE", "<span class=\"glyphicon glyphicon-user\" aria-hidd
 define("SHORT_USER_SETTINGS", "<span class=\"glyphicon glyphicon-cog\" aria-hidden=\"true\"></span> Settings");
 define("SHORT_USER_LOGOUT", "<span class=\"glyphicon glyphicon-log-out\" aria-hidden=\"true\"></span> Logout");
 define("SHORT_USER_MODERATE", "Moderate");
+define("SHORT_CTF_FLAG", "Y0u-f0UnD_@-f1ag");
 
 ?>

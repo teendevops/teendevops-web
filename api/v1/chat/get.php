@@ -12,9 +12,8 @@
     } else {
         $id = $_GET['channel'];
         $max = gone($_GET['max']) ? 100 : $_GET['max'];
-        /*  $tops = (isSignedIn() ? 1000 : 100);
-            if($max > $tops) */
-        $max = 1000;
+        if($max > 2500)
+        $max = 2500;
         $arr = getChat($id, $max, "false");
         $response = array(
             "success"=>true,
@@ -23,14 +22,6 @@
             "chat"=>$arr
         );
 
-        if(!gone($_GET['type'])) {
-            $type = $_GET['type'];
-            if($type == 'dump') {
-                print_r($response);
-                die();
-            }
-        }
-
-        die(json_encode($response));
+        dump($response);
     }
 ?>
