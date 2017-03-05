@@ -23,7 +23,7 @@
                     <?php
                         $array = getChannels();
 
-                        foreach($array as $channel) {
+                        foreach($array as $channel) {// where to start...
                             echo "<a href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
                         }
                     ?>
@@ -78,9 +78,9 @@
                             var builder = "";
                             if(lastuser != msg.username) {
                                 lastuser = msg.username;
-                                builder = builder + "<br><b>" + escapeHTML(msg.username) + "</b><br>";
+                                builder = builder + "<br><b><a style=\"color:black\" href=\"/profile/" + escapeHTML(msg.username) + "\">" + escapeHTML(msg.username) + "</a></b><br>";
                             }
-                            builder = builder + escapeHTML(msg.message) + "<br>";
+                            builder = builder + "<div id=\"id_" + msg.message_id + "\">" + escapeHTML(msg.message) + "</div>";
 
                             wind.innerHTML = wind.innerHTML + builder;
 
