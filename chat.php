@@ -24,7 +24,7 @@
                         $array = getChannels();
 
                         foreach($array as $channel) {
-                            echo "<a href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
+                            echo "<a " . ($channel['id'] == $_GET['channel'] ? 'style="color:green"' : 'style="color:black"') . " href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
                         }
                     ?>
                 </div>
@@ -82,11 +82,11 @@
                                     lastuser = msg.username;
                                     builder = builder + "<br><b><a style=\"color:black\" href=\"/profile/" + escapeHTML(msg.username) + "\">" + escapeHTML(msg.username) + "</a></b><br>";
                                 }
-                                builder = builder + "<div id=\"id_" + msg.message_id + "\">" + escapeHTML(msg.message) + "</div>";
+                                builder = builder + "<div id=\"id_" + msg.message_id + "\">" + escapeHTML(msg.message.replace("[shrug]", "\u00AF\\_(\u30C4)_\/\u00AF").replace("[lenny]", "( ͡° ͜ʖ ͡°)").replace("[rip]", "ಠ_ಠ")) + "</div>";
 
                                 wind.innerHTML = wind.innerHTML + builder;
 
-                                if(msg.message == "/clear") { // temporary clearing feature
+                                if(msg.message.trim().toLowerCase().startsWith("/clear")) { // temporary clearing feature
                                     wind.innerHTML = "";
                                     lastuser = "";
                                 }
@@ -96,7 +96,7 @@
 
                             } else
                                 scroll = false;
-                            
+
                             lastmessage = msg.message;
                         }
 
