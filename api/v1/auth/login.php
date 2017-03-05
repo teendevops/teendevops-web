@@ -6,11 +6,11 @@
     $json = array();
     $json['success'] = false;
 
-    sec_session_start();
-
     if(!gone($_REQUEST['sessiondid'])) {
         session_id($_REQUEST['sessionid']);
         session_start();
+    } else {
+        sec_session_start();
     }
 
     if($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -22,7 +22,7 @@
                 $status = login($_POST['username'], $_POST['password']);
 
                 if($status == 0) {
-                    $json['success'] = true;
+                    $json['success'] = isSignedIn();
                     $json['sessionid'] = session_id();
                     $json['csrf'] = getCSRFToken();
 
