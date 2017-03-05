@@ -11,7 +11,7 @@
     <script src="js/chat.js" crossorigin="anonymous"></script>
 
     <body>
-        <br><br>
+        <br>
         <div class="container">
             <div class="row">
                 <div class="row">
@@ -23,9 +23,8 @@
                     <?php
                         $array = getChannels();
 
-                        foreach($array as $channel) {
-                            echo "<a " . ($channel['id'] == $_GET['channel'] ? 'style="color:green"' : 'style="color:black"') . " href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
-                        }
+                        foreach($array as $channel)
+                            echo "<a " . ($channel['id'] != $_GET['channel'] ? 'style="color:#008000"' : 'style="font-weight: bold;color:#006400"') . " href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
                     ?>
                 </div>
                 <div id="chatWindow" class="col-sm-9"></div>

@@ -6,20 +6,13 @@
     $json = array();
     $json['success'] = false;
 
-    if(!gone($_REQUEST['sessiondid'])) {
-        session_id($_REQUEST['sessionid']);
-        session_start();
-    } else {
-        sec_session_start();
-    }
-
     if($_SERVER['REQUEST_METHOD'] == "POST") {
-        if(gone($_POST['csrf']) || gone($_POST['username']) || gone($_POST['password'])) {
+        if(gone($_REQUEST['csrf']) || gone($_REQUEST['username']) || gone($_REQUEST['password'])) {
             $json['error'] = 'Parameters `csrf`, `username`, and `password` must be set.';
             dump($json);
         } else {
-            if(checkCSRFToken($_POST['csrf'])) {
-                $status = login($_POST['username'], $_POST['password']);
+            if(checkCSRFToken($_REQUEST['csrf'])) {
+                $status = login($_REQUEST['username'], $_REQUEST['password']);
 
                 if($status == 0) {
                     $json['success'] = isSignedIn();

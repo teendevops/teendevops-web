@@ -9,9 +9,11 @@ teendevops has a REST API on the web for developers to create clients with.
  - GET [chat/get/](#chat/get/)
  - GET [users/get/](#users/get/)
  - GET [users/findsimilar/](#users/findsimilar/)
+ - GET [auth/csrf/](#auth/csrf/)
 
 ### POST
  - POST [chat/send/](#chat/send/)
+ - POST [auth/login/](#auth/login/)
 
 ## Documentation
 ### GET <a name="channels/get/"></a>channels/get/
@@ -170,14 +172,40 @@ GET http://teendevops.net/api/v1/users/findsimilar/?language=Java&format=json
 ```
 
 
+### GET <a name="auth/csrf/"></a> auth/csrf/
+Returns the session token and the csrf token
+
+Requires `teendevops_session` cookie to be set
+
+**Parameters:**
+
+| Name        | Required | Description                                                   | Default | Example |
+|-------------|----------|---------------------------------------------------------------|---------|---------|
+|      format | false    | The format to return the data in                              | json    | dump    |
+
+
+**Sample Request:**
+GET http://teendevops.net/api/v1/auth/csrf/?format=json
+
+**Sample Response:**
+```
+{
+   "success":true,
+   "sessionid":"8cma7c63bde0f7i2nsj87753d2",
+   "csrf":"6e2bfb1006713403eb88e998c189c607"
+}
+```
+
+
 ### POST <a name="chat/send/"></a> chat/send/
 Sends a chat message
+
+Requires `teendevops_session` cookie to be set
 
 **Parameters:**
 
 | Name      | Required | Description                           | Default | Example      |
 |-----------|----------|---------------------------------------|---------|--------------|
-| sessionid | true     | The user's session token              |         |              |
 |      csrf | true     | The user's csrf token                 |         |              |
 |   channel | true     | The channel ID to send the message to |         | 1            |
 |   message | true     | The message to send to the channel    |         | Hello world! |
@@ -185,7 +213,35 @@ Sends a chat message
 
 
 **Sample Request:**
-POST http://teendevops.net/api/v1/chat/send/?sessionid=e414c58b9a7e6b6c2071e1f52fede75f&csrf=a434c58bfac855a1a071e1f52fdde12f&msg=hi+guys&channel=1
+POST http://teendevops.net/api/v1/chat/send/?csrf=a434c58bfac855a1a071e1f52fdde12f&msg=hi+guys&channel=1
+
+Cookie: `sessionid=e414c58b9a7e6b6c2071e1f52fede75f;`
+
+**Sample Response:**
+```
+{
+   "success":true
+}
+```
+
+### POST <a name="auth/login"></a> auth/login/
+Authenticates the session id sent via cookies
+
+Requires `teendevops_session` cookie to be set
+
+**Parameters:**
+
+| Name      | Required | Description                                                | Default | Example      |
+|-----------|----------|------------------------------------------------------------|---------|--------------|
+|  username | true     | The username or email of the account                       |         | testuser     |
+|  password | true     | The password of the account                                |         | testpassword |
+|      csrf | true     | The user's csrf token                                      |         |              |
+
+
+**Sample Request:**
+POST http://teendevops.net/api/v1/chat/send/?username=testuser&password=testpassword&csrf=a434c58bfac855a1a071e1f52fdde12f
+
+Cookie: `sessionid=e414c58b9a7e6b6c2071e1f52fede75f;`
 
 **Sample Response:**
 ```

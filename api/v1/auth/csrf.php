@@ -6,11 +6,8 @@
     $json = array();
     $json['success'] = false;
 
-    if(!gone($_REQUEST['sessiondid'])) {
-        session_id($_REQUEST['sessionid']);
-        session_start();
-    } else
-        sec_session_start();
+    $result = ob_get_clean();
+    $json['result'] = $result;
 
     $json['success'] = true;
     $json['sessionid'] = session_id();

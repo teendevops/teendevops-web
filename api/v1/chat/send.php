@@ -7,7 +7,7 @@
     $json['success'] = false;
 
     if($_SERVER['REQUEST_METHOD'] == "POST") {
-        if(!isSignedIn() && (gone($_POST['sessionid']) || !session_valid_id($_POST['sessionid']))) {
+        if(!isSignedIn()) {
             $json['error'] = 'You must be signed in to do that.';
             dump($json);
         } else if(gone($_POST['csrf']) || !checkCSRFToken($_POST['csrf'])) {
@@ -16,21 +16,12 @@
         } else if(empty(trim($_POST['message'])) || gone($_POST['message']) || gone($_POST['channel'])) {
             $json['error'] = 'Please fill all POST fields.';
             dump($json);
-        } else if(/*isChannelExistant($_POST['channel'])*/true) {
-            if(!isSignedin && !gone($_POST['sessionid'])) {
-                session_id($_POST['sessionid']);
-                session_start();
-
-                if(!isSignedIn()) {
-                    $json['error'] = 'Invalid `sessionid` supplied.';
-                    dump($json);
-                }
-            }
+        } else if(true) {
 
             sendChat($_SESSION['username'], $_POST['channel'], $_POST['message']);
             $json['success'] = true;
-            $json['username'] = $_POST['username'];
-            $json['channel'] = $_POST['channel'];
+            $json['channel'] = intval($_POST['channel']);
+            $json['username'] = $_SESSION['username'];
             $json['message'] = $_POST['message'];
             dump($json);
         } else {
