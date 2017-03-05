@@ -113,7 +113,18 @@ GET http://teendevops.net/api/v1/users/get/?username=Arinerron&format=json
 
 **Sample Response:**
 ```
-
+{
+   "success":true,
+   "user":{
+      "id":1,
+      "username":"Arinerron",
+      "rank":"2",
+      "banned":"false",
+      "description":"I'm some random guy. Nah, I'm just too lazy to write a good tagline.",
+      "languages":"Java",
+      "location":"Oregon, USA"
+   }
+}
 ```
 
 

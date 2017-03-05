@@ -45,21 +45,22 @@ function register($username, $email, $password) {
 }
 
 /* returns an array with information about the given user */
-function getUser($id) {
+function getUser($id, $emaild=true) {
     $mysqli = getConnection();
 
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id`=?");
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);
     $stmt->fetch();
 
     $user = array();
     $user['id'] = $id_n;
     $user['username'] = $username_n;
-    $user['email'] = $email_n;
-    $user['name'] = $name_n;
+    if($emaild)
+        $user['email'] = $email_n;
+    //$user['name'] = $name_n;
     $user['rank'] = $rank_n;
     $user['banned'] = $banned_n;
     $user['description'] = $description_n;
@@ -70,21 +71,22 @@ function getUser($id) {
 }
 
 /* returns an array with information about the given user */
-function getUserByName($id) {
+function getUserByName($id, $emaild=true) {
     $mysqli = getConnection();
 
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=?");
     $stmt->bind_param('s', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $email_n, $name_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);
     $stmt->fetch();
 
     $user = array();
     $user['id'] = $id_n;
     $user['username'] = $username_n;
-    $user['email'] = $email_n;
-    $user['name'] = $name_n;
+    if($emaild)
+        $user['email'] = $email_n;
+    //$user['name'] = $name_n;
     $user['rank'] = $rank_n;
     $user['banned'] = $banned_n;
     $user['description'] = $description_n;
@@ -212,7 +214,7 @@ function printLoginAttempts($limit, $filter) { // warning: filter does not sanit
         echo '
         <tr ' . ($success == 'true' ? 'style="background-color:#11CE00;"' : 'style="background-color:#FF0000;"') .'>
             <td>' . htmlspecialchars($time) . '</td>
-            <td><a href="/profile/?id=' . htmlspecialchars($id) . '">' . htmlspecialchars($username) . '</a></td>
+            <td><a href="/profile/' . htmlspecialchars($username) . '/">' . htmlspecialchars($username) . '</a></td>
             <td><a href="/admin/attempts/?filter=true">' . htmlspecialchars($success) . '</a></td>
             <td>' . htmlspecialchars($ip) . '</td>
             <td>' . htmlspecialchars($insecure_ip) . '</td>
@@ -258,6 +260,55 @@ function getChat($id, $limit, $deleted) {
     }
 
     return $arr;
+}
+
+/* returns a portion of the chat starting at index */
+function getChatByIndex($id, $index, $limit, $deleted) {
+    $arr = array();
+
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+	$stmt = $mysqli->prepare("SELECT * FROM `chat` WHERE `channel`=? AND `deleted`=? AND `id`>? LIMIT ?");
+    $stmt->bind_param('ssii', $id, $deleted, $index, $limit);
+    $stmt->execute();
+
+    $stmt->store_result();
+    $stmt->bind_result($username, $timestamp, $channel, $message, $deleted, $id_n);
+    while ($stmt->fetch()) {
+        $arr[] = array(
+            "username"=>$username,
+            "timestamp"=>$timestamp,
+            "channel"=>$channel,
+            "message"=>$message,
+            "deleted"=>$deleted,
+            "message_id"=>$id_n
+        );
+    }
+
+    return $arr;
+}
+
+/* returns an int; the number of messages in a channel */
+function getChatMessageCount($channel) {
+    $mysqli = getConnection();
+    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id`=?");
+    $stmt->bind_param('i', $channel);
+    $stmt->execute();
+    $stmt->store_result();
+
+    return $stmt->num_rows;
+}
+
+/* returns an int; the latest message id */
+function getChatLatestID($channel) {
+    $mysqli = getConnection();
+    $stmt = $mysqli->prepare("SELECT * FROM `chat` WHERE `id`=? ORDER BY `id` DESC LIMIT 3");
+    $stmt->bind_param('i', $channel);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($username, $timestamp, $channel, $message, $deleted, $id_n);
+    $stmt->fetch();
+
+    return $id_n;
 }
 
 /* sends a chat message to the given channel. TODO: use id rather than username */
@@ -469,7 +520,7 @@ function showSimilar() {
                                             <h3>" . $_SESSION['html_languages'] . " Developer</h3>
                                         </center></div>";
                         echo "          <div class=\"col-sm-3\">
-                                            <center><h2><a href=\"profile/?id=" . $usr['id'] . "\">" . htmlspecialchars($usr['username']) . "</a></h2>
+                                            <center><h2><a href=\"profile/" . htmlspecialchars($usr['username']) . "/\">" . htmlspecialchars($usr['username']) . "</a></h2>
                                             " . htmlspecialchars($usr['description']) . "
                                         </div></center>";
 	            }

@@ -21,7 +21,7 @@
                     <center>
                         <img src="/assets/user-icons/default.png">
                         <h1><a href="/profile/<?php echo htmlspecialchars($user['username']); ?>/"><?php echo htmlspecialchars($user['username']); ?></a></h1>
-                        <h2><?php echo htmlspecialchars(NAME) . " " . $user['rank_html'] ?></h2>
+                        <h2><?php echo htmlspecialchars(getRank($user['rank'])) ?></h2>
                         <h2 class="lang"><?php
                             $href = ($user['id'] == $_SESSION['id']);
                             $print = isSignedIn() && ($_SESSION['rank'] != 0 || $href);

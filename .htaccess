@@ -3,6 +3,9 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^([^/]+)/$ $1.php
 RewriteRule ^([^/]+)/([^/]+)/$ /$1/$2.php
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/$ /$1/$2/$3.php
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/$ /$1/$2/$3/$4.php
+RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/$ /$1/$2/$3/$4/$5.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]{1,5}|/)$

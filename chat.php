@@ -24,7 +24,7 @@
                         $array = getChannels();
 
                         foreach($array as $channel) {
-                            echo "<a href=\"/chat/?channel=" . $channel['id'] . "\">" . htmlspecialchars($channel['title']) . "</a><br>";
+                            echo "<a href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
                         }
                     ?>
                 </div>
@@ -43,29 +43,60 @@
         </div>
         <?php
             $there = !gone($_GET['channel']);
+
+            $urlx = '/htmlchat/?channel=1';
+            if($there)
+                $urlx = '/htmlchat/?channel=' . preg_replace("/[^0-9]/", "", $_GET['channel']) .  '"';
         ?>
         <script>
-            setInterval(refetch, 600);
-            function refetch() {
-                var urlx = <?php
-                    if($there) {
-                        echo '"/htmlchat/?channel=' . preg_replace("/[^0-9]/", "", $_GET['channel']) .  '"';
-                    } else {
-                        echo '"/htmlchat/?channel=1"';
-                    }
-                ?>;
-                $.ajax({
-                   url:urlx,
-                   type:'GET',
-                   success: function(data){
-                       var wind = document.getElementById("chatWindow");
+            var last = 0;
+            var lastuser = "";
 
-                       if(data.localeCompare(wind.innerHTML) != 0) {
-                            wind.innerHTML = data;
+            $.ajax({
+                url:"<?php echo $urlx; ?>",
+                type:'GET',
+                success: function(data) {
+                    last = data.count - 4; // load last 25 messages...
+                }
+            });
+
+            setInterval(refetch, 400);
+            function refetch() {
+                var urlx = "<?php echo $urlx; ?>&message_id=" + (last + 1);
+                $.ajax({
+                    url:urlx,
+                    type:'GET',
+                    success: function(data){
+                        var wind = document.getElementById("chatWindow");
+
+                        for (var i = 0; i < data.length; i++) {
+                            var msg = data[i];
+                            if(msg.message_id > last)
+                                last = msg.message_id;
+
+                            var builder = "";
+                            if(lastuser != msg.username) {
+                                lastuser = msg.username;
+                                builder = builder + "<br><b>" + escapeHTML(msg.username) + "</b><br>";
+                            }
+
+                            builder = builder + escapeHTML(msg.message) + "<br>";
+                            wind.innerHTML = wind.innerHTML + builder;
                             wind.scrollTop = wind.scrollHeight;
-                       }
+                        }
                    }
                 });
+            }
+
+
+
+            function escapeHTML(unsafe) {
+                return unsafe
+                     .replace(/&/g, "&amp;")
+                     .replace(/</g, "&lt;")
+                     .replace(/>/g, "&gt;")
+                     .replace(/"/g, "&quot;")
+                     .replace(/'/g, "&#039;");
             }
 
             function send() {

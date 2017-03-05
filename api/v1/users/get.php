@@ -9,15 +9,15 @@
     if($_SERVER['REQUEST_METHOD'] == "GET") {
         $user = array();
         if(!gone($_REQUEST['id']))
-            $user = getUser($_REQUEST['id']);
+            $user = getUser($_REQUEST['id'], false);
         else if(!gone($_REQUEST['username']))
-            $user = getUserByName($_REQUEST['username']);
+            $user = getUserByName($_REQUEST['username'], false);
         else {
             $json['error'] = 'Either parameter `id` or `username` must be set.';
             dump($json);
         }
 
-        if(!gone($user['banned']) && !$user['banned']) {
+        if(!gone($user['banned']) || $user['banned']) {
             $json['success'] = true;
             $json['user'] = $user;
             dump($json);
