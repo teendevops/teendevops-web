@@ -23,7 +23,7 @@
                     <?php
                         $array = getChannels();
 
-                        foreach($array as $channel) {// where to start...
+                        foreach($array as $channel) {
                             echo "<a href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
                         }
                     ?>
@@ -49,6 +49,7 @@
         <script>
             var last = 0;
             var lastuser = "";
+            var lastmessage = "";
             var first = true;
 
             $.ajax({
@@ -72,25 +73,31 @@
                         for (var i = 0; i < data.length; i++) {
                             scroll = true; // enable scrolling
                             var msg = data[i];
-                            if(msg.message_id > last)
-                                last = msg.message_id;
+                            if(lastmessage != msg.message) {
+                                if(msg.message_id > last)
+                                    last = msg.message_id;
 
-                            var builder = "";
-                            if(lastuser != msg.username) {
-                                lastuser = msg.username;
-                                builder = builder + "<br><b><a style=\"color:black\" href=\"/profile/" + escapeHTML(msg.username) + "\">" + escapeHTML(msg.username) + "</a></b><br>";
-                            }
-                            builder = builder + "<div id=\"id_" + msg.message_id + "\">" + escapeHTML(msg.message) + "</div>";
+                                var builder = "";
+                                if(lastuser != msg.username) {
+                                    lastuser = msg.username;
+                                    builder = builder + "<br><b><a style=\"color:black\" href=\"/profile/" + escapeHTML(msg.username) + "\">" + escapeHTML(msg.username) + "</a></b><br>";
+                                }
+                                builder = builder + "<div id=\"id_" + msg.message_id + "\">" + escapeHTML(msg.message) + "</div>";
 
-                            wind.innerHTML = wind.innerHTML + builder;
+                                wind.innerHTML = wind.innerHTML + builder;
 
-                            if(msg.message == "/clear") { // temporary clearing feature
-                                wind.innerHTML = "";
-                                lastuser = "";
-                            }
+                                if(msg.message == "/clear") { // temporary clearing feature
+                                    wind.innerHTML = "";
+                                    lastuser = "";
+                                }
 
-                            if(first)
-                                wind.scrollTop = wind.scrollHeight;
+                                if(first)
+                                    wind.scrollTop = wind.scrollHeight;
+
+                            } else
+                                scroll = false;
+                            
+                            lastmessage = msg.message;
                         }
 
                         if(scroll)

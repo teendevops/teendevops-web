@@ -13,7 +13,7 @@
         } else if(gone($_POST['csrf']) || !checkCSRFToken($_POST['csrf'])) {
             $json['error'] = 'Invalid CSRF Token.';
             dump($json);
-        } else if(/*gone($_POST['message']) || */gone($_POST['channel'])) {
+        } else if(empty(trim($_POST['message'])) || gone($_POST['message']) || gone($_POST['channel'])) {
             $json['error'] = 'Please fill all POST fields.';
             dump($json);
         } else if(/*isChannelExistant($_POST['channel'])*/true) {
