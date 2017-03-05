@@ -97,7 +97,7 @@ GET http://teendevops.net/api/v1/chat/get/?channel=1&limit=2&format=json
 
 
 ### GET <a name="users/get/"></a>users/get/
-Returns a list of users
+Returns the details about a user
 
 **Parameters:**
 

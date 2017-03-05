@@ -56,7 +56,7 @@
                 url:"<?php echo $urlx; ?>",
                 type:'GET',
                 success: function(data) {
-                    last = data.count - 4; // load last 25 messages...
+                    last = data.count - 25; // load last 25 messages...
                 }
             });
 

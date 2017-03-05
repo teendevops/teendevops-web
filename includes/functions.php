@@ -17,7 +17,7 @@ function isSignedIn() {
 /* securely starts a new session */
 function sec_session_start() {
     $cookieParams = session_get_cookie_params();
-    session_set_cookie_params($cookieParams["lifetime"] + (60 * 60), // 1 hr extention
+    session_set_cookie_params($cookieParams["lifetime"] + (60 * 60 * 24), // 1 hr extention
                               $cookieParams["path"],
                               $cookieParams["domain"],
                              HTTPS, // secure
@@ -290,7 +290,7 @@ function getChatByIndex($id, $index, $limit, $deleted) {
 /* returns an int; the number of messages in a channel */
 function getChatMessageCount($channel) {
     $mysqli = getConnection();
-    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id`=?");
+    $stmt = $mysqli->prepare("SELECT * FROM `chat` WHERE `channel`=?");
     $stmt->bind_param('i', $channel);
     $stmt->execute();
     $stmt->store_result();
@@ -301,13 +301,13 @@ function getChatMessageCount($channel) {
 /* returns an int; the latest message id */
 function getChatLatestID($channel) {
     $mysqli = getConnection();
-    $stmt = $mysqli->prepare("SELECT * FROM `chat` WHERE `id`=? ORDER BY `id` DESC LIMIT 3");
+    $stmt = $mysqli->prepare("SELECT * FROM `chat` WHERE `channel`=? ORDER BY `id` DESC LIMIT 1");
     $stmt->bind_param('i', $channel);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($username, $timestamp, $channel, $message, $deleted, $id_n);
     $stmt->fetch();
-
+    
     return $id_n;
 }
 
