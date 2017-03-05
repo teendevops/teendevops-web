@@ -175,7 +175,7 @@ GET http://teendevops.net/api/v1/users/findsimilar/?language=Java&format=json
 ### GET <a name="auth/csrf/"></a> auth/csrf/
 Returns the session token and the csrf token
 
-Requires `teendevops_session` cookie to be set
+If `teendevops_session` cookie is set, it will return the csrf token for that sessionid. If it is not set, it will generate a sessionid and csrf token.
 
 **Parameters:**
 
@@ -200,7 +200,7 @@ GET http://teendevops.net/api/v1/auth/csrf/?format=json
 ### POST <a name="chat/send/"></a> chat/send/
 Sends a chat message
 
-Requires `teendevops_session` cookie to be set
+Requires `teendevops_session` cookie to be set.
 
 **Parameters:**
 
