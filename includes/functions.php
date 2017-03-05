@@ -61,8 +61,8 @@ function getUser($id, $emaild=true) {
     if($emaild)
         $user['email'] = $email_n;
     //$user['name'] = $name_n;
-    $user['rank'] = $rank_n;
-    $user['banned'] = $banned_n;
+    $user['rank'] = intval($rank);
+    $user['banned'] = boolval($banned_n);
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
@@ -252,10 +252,10 @@ function getChat($id, $limit, $deleted) {
         $arr[] = array(
             "username"=>$username,
             "timestamp"=>$timestamp,
-            "channel"=>$channel,
+            "channel"=>intval($channel),
             "message"=>$message,
-            "deleted"=>$deleted,
-            "message_id"=>$id_n
+            "deleted"=>boolval($deleted),
+            "message_id"=>intval($id_n)
         );
     }
 
@@ -277,10 +277,10 @@ function getChatByIndex($id, $index, $limit, $deleted) {
         $arr[] = array(
             "username"=>$username,
             "timestamp"=>$timestamp,
-            "channel"=>$channel,
+            "channel"=>intval($channel),
             "message"=>$message,
-            "deleted"=>$deleted,
-            "message_id"=>$id_n
+            "deleted"=>boolval($deleted),
+            "message_id"=>intval($id_n)
         );
     }
 
@@ -358,11 +358,11 @@ function getUsersByLanguage($language) {
             "id"=>$id,
             "username"=>$username,
             "name"=>$name,
-            "banned"=>$banned,
+            "banned"=>boolval($banned),
             "description"=>$description,
             "location"=>$location,
             "languages"=>$languages,
-            "rank"=>$rank
+            "rank"=>intval($rank)
         );
     }
 
@@ -385,11 +385,11 @@ function getUsers() {
             "id"=>$id,
             "username"=>$username,
             "name"=>$name,
-            "banned"=>$banned,
+            "banned"=>boolval($banned),
             "description"=>$description,
             "location"=>$location,
             "languages"=>$languages,
-            "rank"=>$rank
+            "rank"=>intval($rank)
         );
     }
 

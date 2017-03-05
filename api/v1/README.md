@@ -41,7 +41,7 @@ GET http://teendevops.net/api/v1/channels/get/?format=json
          "id":2,
          "title":"hackers",
          "description":"Just testing",
-         "creator":""
+         "creator":"Arinerron"
       },
       {
          "id":3,
@@ -72,23 +72,23 @@ GET http://teendevops.net/api/v1/chat/get/?channel=1&limit=2&format=json
 ```
 {
    "success":true,
-   "channel":"1",
-   "limit":"2",
+   "channel":1,
+   "limit":2,
    "chat":[
       {
          "username":"spamaccount",
          "timestamp":"2017-03-04 01:27:33",
-         "channel":"1",
+         "channel":1,
          "message":"hey\n",
-         "deleted":"false",
+         "deleted":false,
          "message_id":1
       },
       {
          "username":"spamaccount",
          "timestamp":"2017-03-04 01:27:40",
-         "channel":"1",
+         "channel":1,
          "message":"how r u\n",
-         "deleted":"false",
+         "deleted":false,
          "message_id":2
       }
    ]
@@ -118,8 +118,8 @@ GET http://teendevops.net/api/v1/users/get/?username=Arinerron&format=json
    "user":{
       "id":1,
       "username":"Arinerron",
-      "rank":"2",
-      "banned":"false",
+      "rank":2,
+      "banned":false,
       "description":"I'm some random guy. Nah, I'm just too lazy to write a good tagline.",
       "languages":"Java",
       "location":"Oregon, USA"
@@ -150,22 +150,20 @@ GET http://teendevops.net/api/v1/users/findsimilar/?language=Java&format=json
       {
          "id":1,
          "username":"Arinerron",
-         "name":0,
-         "banned":"false",
+         "banned":false,
          "description":"Write something about yourself here...",
          "location":"cat location > \/dev\/null",
          "language":"Java",
-         "rank":"1"
+         "rank":1
       },
       {
          "id":3,
          "username":"mooncat39",
-         "name":0,
-         "banned":"false",
+         "banned":false,
          "description":"I am mooncat39. hi",
          "location":"Oregon",
          "language":"Java",
-         "rank":"0"
+         "rank":0
       }
    ]
 }
