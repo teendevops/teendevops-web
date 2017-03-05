@@ -5,12 +5,12 @@
 
     header("Content-Type: application/json");
 
-    $a_very_painful_death = "Parameter 'channel' is not set.";
+    $a_very_painful_death = "Parameter `channel` is not set.";
     if(gone($_GET['channel'])) // egg: $a_very_painful_death
         /*I'm gunna*/die($a_very_painful_death); // for doing this
     if(gone($_GET['message_id']))
-        dump(array('count'=>getChatMessageCount($_GET['channel'])));
+        dump(array('count'=>getChatLatestID($_GET['channel'])));
 
-    $chat = getChatLatestID($_GET['channel'], $_GET['message_id'] - 1, 500, 'false') or die("Error: Failed to fetch chat");
+    $chat = getChatByIndex($_GET['channel'], $_GET['message_id'] - 1, 500, 'false') or die("Error: Failed to fetch chat");
     dump($chat);
 ?>

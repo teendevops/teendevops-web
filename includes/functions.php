@@ -268,7 +268,7 @@ function getChatByIndex($id, $index, $limit, $deleted) {
 
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
 	$stmt = $mysqli->prepare("SELECT * FROM `chat` WHERE `channel`=? AND `deleted`=? AND `id`>? LIMIT ?");
-    $stmt->bind_param('ssii', $id, $deleted, $index, $limit);
+    $stmt->bind_param('isii', $id, $deleted, $index, $limit);
     $stmt->execute();
 
     $stmt->store_result();
@@ -307,7 +307,7 @@ function getChatLatestID($channel) {
     $stmt->store_result();
     $stmt->bind_result($username, $timestamp, $channel, $message, $deleted, $id_n);
     $stmt->fetch();
-    
+
     return $id_n;
 }
 
@@ -361,7 +361,7 @@ function getUsersByLanguage($language) {
             "banned"=>$banned,
             "description"=>$description,
             "location"=>$location,
-            "language"=>$languages,
+            "languages"=>$languages,
             "rank"=>$rank
         );
     }
@@ -388,7 +388,7 @@ function getUsers() {
             "banned"=>$banned,
             "description"=>$description,
             "location"=>$location,
-            "language"=>$languages,
+            "languages"=>$languages,
             "rank"=>$rank
         );
     }
