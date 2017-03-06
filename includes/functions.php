@@ -62,10 +62,11 @@ function getUser($id, $emaild=true) {
         $user['email'] = $email_n;
     //$user['name'] = $name_n;
     $user['rank'] = intval($rank);
-    $user['banned'] = boolval($banned_n);
+    $user['banned'] = !boolval($banned_n);
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
+    $user['icon'] = getProfileImage($username);
 
     return $user;
 }
@@ -87,13 +88,20 @@ function getUserByName($id, $emaild=true) {
     if($emaild)
         $user['email'] = $email_n;
     //$user['name'] = $name_n;
-    $user['rank'] = $rank_n;
-    $user['banned'] = $banned_n;
+    $user['rank'] = intval($rank_n);
+    $user['banned'] = !boolval($banned_n);
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
+    $user['icon'] = getProfileImage($username_n);
 
     return $user;
+}
+
+/* Get URL to profile image by username */
+function getProfileImage($username) {
+    $icon = '/assets/user-icons/' . md5(md5(strtolower($username))) . '.png';
+    return (file_exists('./' . $icon) ? $icon : '/assets/user-icons/default.png');
 }
 
 /* obselete. see:getUser */
@@ -162,6 +170,7 @@ function login($username_or_email, $password_real) {
                 $_SESSION['html_language'] = htmlspecialchars($languages);
                 $_SESSION['location'] = $location;
                 $_SESSION['html_location'] = htmlspecialchars($location);
+                $_SESSION['icon'] = getProfileImage($username_n);
 
                 return 0; // success
             } else {
@@ -362,7 +371,8 @@ function getUsersByLanguage($language) {
             "description"=>$description,
             "location"=>$location,
             "languages"=>$languages,
-            "rank"=>intval($rank)
+            "rank"=>intval($rank),
+            "icon"=>getProfileImage($username)
         );
     }
 
@@ -389,7 +399,8 @@ function getUsers() {
             "description"=>$description,
             "location"=>$location,
             "languages"=>$languages,
-            "rank"=>intval($rank)
+            "rank"=>intval($rank),
+            "icon"=>getProfileImage($username)
         );
     }
 
@@ -516,7 +527,7 @@ function showSimilar() {
             foreach($array as $usr) {
 	            if($usr['id'] != $_SESSION['id']) {
                         echo "          <div class=\"col-sm-3\"><center>
-                                            <img src=\"assets/user-icons/default.png\" id=\"icon-front\">
+                                            <img src=\"" . $usr['icon'] . "\" id=\"icon-front\">
                                             <h3>" . $_SESSION['html_languages'] . " Developer</h3>
                                         </center></div>";
                         echo "          <div class=\"col-sm-3\">

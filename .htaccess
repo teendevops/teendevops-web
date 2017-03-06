@@ -1,15 +1,17 @@
-RewriteEngine on
+RewriteEngine On
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^/]+)/$ $1.php
-RewriteRule ^([^/]+)/([^/]+)/$ /$1/$2.php
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)/$ /$1/$2/$3.php
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/$ /$1/$2/$3/$4.php
-RewriteRule ^([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)/$ /$1/$2/$3/$4/$5.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]{1,5}|/)$
-RewriteRule (.*)$ /$1/ [R=301,L]
+RewriteRule ^profile/([^/]+)/?$ /profile.php?username=$1 [L]
+RewriteRule ^profiles/([^/]+)/?$ /profile.php?username=$1 [L]
+RewriteRule ^users/([^/]+)/?$ /profile.php?username=$1 [L]
+RewriteRule ^user/([^/]+)/?$ /profile.php?username=$1 [L]
+RewriteRule ^chat/([^/]+)/?$ /chat.php?channel=$1 [L]
+RewriteRule ^channel/([^/]+)/?$ /chat.php?channel=$1 [L]
 
-RewriteRule ^/?profile/([^/]+)/([^/]+)/?$ /profile.php?username=$1 [L]
-RewriteRule ^/?chat/([^/]+)/([^/]+)/?$ /chat.php?channel=$1 [L]
+# Append .php if that file exists (internal rewrite)
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+RewriteRule (.*?)/?$ $1.php [L]
+
+Header set X-Frame-Options DENY
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
+Header set Referrer-Policy no-referrer

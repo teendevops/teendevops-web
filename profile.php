@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-sm-3">
                     <center>
-                        <img src="/assets/user-icons/default.png">
+                        <img src="<?php echo $user['icon']; ?>">
                         <h1><a href="/profile/<?php echo htmlspecialchars($user['username']); ?>/"><?php echo htmlspecialchars($user['username']); ?></a></h1>
                         <h2><?php echo htmlspecialchars(getRank($user['rank'])) ?></h2>
                         <h2 class="lang"><?php

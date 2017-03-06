@@ -8,21 +8,85 @@
         }
     ?>
 
-    <body>
+    <body><br>
         <?php
             if($_SERVER['REQUEST_METHOD'] == "POST") {
                 if(isset($_POST['csrf']) && checkCSRFToken($_POST['csrf'])) {
                     if(!isLanguageValid($_POST['languages']))
                         $_POST['languages'] = "None";
                     setSettings($_SESSION['id'], $_POST['description'], $_POST['languages'], $_POST['locationx']);
+
+                    if(!empty($_FILES['image']) && $_FILES['image']['error'] == 0) {
+                        $uploaddir = 'assets/user-icons/';
+
+                        /* Generates random filename and extension */
+                        function tempnam_sfx($path, $suffix) {
+                            do {
+                                $file = $path . "/" . md5(md5(strtolower($_SESSION['username']))) . $suffix; // doesn't need to be cryptographically secure
+                                //unlink(getcwd() . $file) or die("Failed to delete old");
+                                $fp = @fopen($file, 'x');
+                            }
+                            while(!$fp);
+
+                            fclose($fp);
+                            return $file;
+                        }
+
+                        /* Process image with GD library */
+                        $verifyimg = getimagesize($_FILES['image']['tmp_name']);
+
+                        /* Make sure the MIME type is an image */
+                        $pattern = "#^(image/)[^\s\n<]+$#i";
+
+                        if(!preg_match($pattern, $verifyimg['mime'])) {
+                            echo '  <div class="alert alert-danger">
+                                      <strong>Uh oh!</strong> That doesn\'t quite look like an image file!.
+                                    </div>';
+                            return;
+                        }
+
+                        /* Rename both the image and the extension */
+                        $uploadfile = tempnam_sfx($uploaddir, ".png");
+
+                        /* Resize the file */
+                        $fn = $_FILES['image']['tmp_name'];
+                        $size = getimagesize($fn);
+                        $ratio = $size[0] / $size[1]; // width/height
+
+                        if( $ratio > 1) {
+                            $width = 300;
+                            $height = 300/$ratio;
+                        } else {
+                            $width = 300 * $ratio;
+                            $height = 300;
+                        }
+
+                        $src = imagecreatefromstring(file_get_contents($fn));
+                        $dst = imagecreatetruecolor($width, $height);
+                        imagecopyresampled($dst, $src, 0, 0, 0, 0, $width, $height, $size[0], $size[1]);
+                        imagedestroy($src);
+                        imagepng($dst, $_FILES['image']['tmp_name']); // adjust format as needed
+                        imagedestroy($dst);
+
+                        /* Upload the file to a secure directory with the new name and extension */
+                        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadfile)) {
+                            echo '<div class="alert alert-success">
+                                  <strong>Success!</strong> Your <a href="/profile/' . htmlspecialchars($_SESSION['username']) . '/">profile</a> has been updated.
+                                </div>';
+                        } else {
+                            echo '<div class="alert alert-danger">
+                                    <strong>Whoops!</strong> Something went wrong.
+                                  </div>';
+                        }
+                    }
                 } else {
-                    echo "Error: Invalid CSRF token.";
-                    http_response_code(401);
+                    echo '  <div class="alert alert-danger">
+                              <strong>Error:</strong> Invalid CSRF token.
+                            </div>';
                 }
             }
         ?>
-        <br>
-        <form class="form-horizontal" action="/settings/" method="post">
+        <form class="form-horizontal" enctype="multipart/form-data" action="/settings/" method="post">
             <fieldset>
 
             <!-- Form Name -->
@@ -78,6 +142,15 @@
               </div>
             </div>
 
+            <!-- File input-->
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="image">User Icon</label>
+              <div class="col-md-5">
+              <input id="image" type="file" class="file" name="image">
+              <span class="help-block">Image will be resized to 300x300</span>
+              </div>
+            </div>
+
             <!-- Button -->
             <div class="form-group">
               <label class="col-md-4 control-label" for="save">Done?</label>
@@ -85,7 +158,6 @@
                 <button id="save" name="save" class="btn btn-primary">Save</button>
               </div>
             </div>
-
             </fieldset>
         </form>
     </body>
