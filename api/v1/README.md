@@ -216,21 +216,24 @@ Requires `teendevops_session` cookie to be set.
 
 
 **Sample Request:**
-POST http://teendevops.net/api/v1/chat/send/?csrf=a434c58bfac855a1a071e1f52fdde12f&msg=hi+guys&channel=1
+POST http://teendevops.net/api/v1/chat/send/?csrf=a434c58bfac855a1a071e1f52fdde12f&message=hi+guys&channel=1
 
 Cookie: `sessionid=e414c58b9a7e6b6c2071e1f52fede75f;`
 
 **Sample Response:**
 ```
 {
-   "success":true
+   "success":true,
+   "channel":1,
+   "username":Arinerron,
+   "message":"hi guys"
 }
 ```
 
 ### POST <a name="auth/login"></a> auth/login/
 Authenticates the session id sent via cookies
 
-Requires `teendevops_session` cookie to be set
+Requires `teendevops_session` cookie to be set. Will return a brand new authenticated sessionid and csrf token to use. This is to prevent [session fixation](https://www.owasp.org/index.php/Session_fixation).
 
 **Parameters:**
 
@@ -249,6 +252,8 @@ Cookie: `sessionid=e414c58b9a7e6b6c2071e1f52fede75f;`
 **Sample Response:**
 ```
 {
-   "success":true
+   "success":true,
+   "sessionid":"tj0fkeh6l0vmt2u0dr7sqc3uh6",
+   "csrf":"fc8e1fabf22dac6589cfa261ad643512"
 }
 ```
