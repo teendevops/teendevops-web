@@ -168,7 +168,7 @@ GET http://teendevops.net/api/v1/users/findsimilar/?language=Java&format=json
          "location":"Oregon",
          "language":"Java",
          "rank":0,
-         "icon":"\/assets\/user-icons\/a62ceefd0638f31f6c442552f373c5e.png"
+         "icon":"\/assets\/user-icons\/default.png"
       }
    ]
 }

@@ -15,7 +15,7 @@
         <div class="container">
             <div class="row">
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div id="" class="col-xs-12">
                         <b>Menu Bar here</b>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                             echo "<a " . ($channel['id'] != $_GET['channel'] ? 'style="color:#008000"' : 'style="font-weight: bold;color:#006400"') . " href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
                     ?>
                 </div>
-                <div id="chatWindow" class="col-sm-9"></div>
+                <div id="chatWindow" class="col-sm-9" style="font-family: opensansemoji;"></div>
             </div>
             <div class="row">
                 <div id="messageWindow" class="col-sm-12 col-md-11">
@@ -46,10 +46,13 @@
                 $urlx = '/htmlchat/?channel=' . preg_replace("/[^0-9]/", "", $_GET['channel']);
         ?>
         <script>
+            var swearFilter = true; // set this to false to disable filtering
+
             var last = 0;
             var lastuser = "";
             var lastmessage = "";
             var first = true;
+            var replace = {};
 
             $.ajax({
                 url:"<?php echo $urlx; ?>",
@@ -99,6 +102,12 @@
                             lastmessage = msg.message;
                         }
 
+                        if(data.length != 0 && swearFilter) {
+                            var html = wind.innerHTML;
+                            for (var key in replace)
+                                html = html.replace(key, replace[key]);
+                            wind.innerHTML = html;
+                        }
                         if(scroll)
                             scrollSmoothToBottom("chatWindow");
                         if(first)
@@ -147,6 +156,20 @@
                 if (e.keyCode == 13 && !e.shiftKey) {
                     send();
                     e.preventDefault();
+                }
+            });
+
+            /* swear word filter */
+            $.ajax({
+                url:"/assets/blacklist.txt",
+                type:'GET',
+                success: function(data) {
+                    data = data.replace(/[a-zA-Z]/g,function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+                    var lines = data.split("\n");
+                    for(var i = 0, len = lines.length; i < len; i++) {
+                        var split = lines[i].split("=");
+                        replace[split[0]] = split[1];
+                    }
                 }
             });
         </script>
