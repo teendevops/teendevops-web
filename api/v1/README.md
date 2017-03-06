@@ -124,7 +124,8 @@ GET http://teendevops.net/api/v1/users/get/?username=Arinerron&format=json
       "banned":false,
       "description":"I'm some random guy. Nah, I'm just too lazy to write a good tagline.",
       "languages":"Java",
-      "location":"Oregon, USA"
+      "location":"Oregon, USA",
+      "icon":"\/assets\/user-icons\/97ddfbefd0638f31f6c442552f379d05.png"
    }
 }
 ```
@@ -156,7 +157,8 @@ GET http://teendevops.net/api/v1/users/findsimilar/?language=Java&format=json
          "description":"Write something about yourself here...",
          "location":"cat location > \/dev\/null",
          "language":"Java",
-         "rank":1
+         "rank":1,
+         "icon":"\/assets\/user-icons\/97ddfbefd0638f31f6c442552f379d05.png"
       },
       {
          "id":3,
@@ -165,7 +167,8 @@ GET http://teendevops.net/api/v1/users/findsimilar/?language=Java&format=json
          "description":"I am mooncat39. hi",
          "location":"Oregon",
          "language":"Java",
-         "rank":0
+         "rank":0,
+         "icon":"\/assets\/user-icons\/a62ceefd0638f31f6c442552f373c5e.png"
       }
    ]
 }

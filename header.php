@@ -1,13 +1,6 @@
 <?php
     include_once "includes/functions.php";
     include_once "includes/strings.php";
-    if(EASTER_EGGS) {
-        //header(base64_decode("SGVsbG8hIEknZCBsb3ZlIHRvIGNoYXQgc29tZSB0aW1lLiBGZWVsIGZyZWUgdG8gc2hvb3QgbWUgYW4gZW1haWwgYXQgbWVAYXJpbmVycm9uLmNvbSA6KQ==")); // if something goes wrong, blame it on Arav :P
-        header("X-Easter-Egg: You found an easter egg: e4st3r_egg_5");
-    }
-    header("X-XSS-Protection: 1; mode=block"); // force browser xss protection
-    header("X-Frame-Options: ALLOW-FROM http://teendevops.net"); // prevent clickjacking attacks
-    header("X-Content-Type-Options: nosniff"); // prevent mime-type sniffing
 
     if(!SECURE) {
         ini_set('display_errors', 1);

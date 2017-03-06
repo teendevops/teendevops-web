@@ -62,7 +62,7 @@ function getUser($id, $emaild=true) {
         $user['email'] = $email_n;
     //$user['name'] = $name_n;
     $user['rank'] = intval($rank);
-    $user['banned'] = !boolval($banned_n);
+    $user['banned'] = boolval($banned_n);
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
@@ -89,7 +89,7 @@ function getUserByName($id, $emaild=true) {
         $user['email'] = $email_n;
     //$user['name'] = $name_n;
     $user['rank'] = intval($rank_n);
-    $user['banned'] = !boolval($banned_n);
+    $user['banned'] = boolval($banned_n);
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
@@ -101,7 +101,7 @@ function getUserByName($id, $emaild=true) {
 /* Get URL to profile image by username */
 function getProfileImage($username) {
     $icon = '/assets/user-icons/' . md5(md5(strtolower($username))) . '.png';
-    return (file_exists('./' . $icon) ? $icon : '/assets/user-icons/default.png');
+    return (file_exists($_SERVER['DOCUMENT_ROOT'] . $icon) ? $icon : '/assets/user-icons/default.png');
 }
 
 /* obselete. see:getUser */
