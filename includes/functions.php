@@ -36,23 +36,23 @@ function toAbsoluteURL($relative) {
 }
 
 /* registers a new user */
-function register($username, $email, $password) {
+function register($username, $email, $password) { /* [column]*/
     $mysqli = getConnection();
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`, `rank`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0')");
+    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`, `rank`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0', '/assets/user-icons/default.png')");
     $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
     $stmt->execute();
 }
 
 /* returns an array with information about the given user */
-function getUser($id, $emaild=true) {
+function getUser($id, $emaild=true) { /* [column]*/
     $mysqli = getConnection();
 
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `id`=?");
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
     $stmt->fetch();
 
     $user = array();
@@ -66,20 +66,20 @@ function getUser($id, $emaild=true) {
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
-    $user['icon'] = getProfileImage($username);
+    $user['icon'] = profileImageExists($icon_n);
 
     return $user;
 }
 
 /* returns an array with information about the given user */
-function getUserByName($id, $emaild=true) {
+function getUserByName($id, $emaild=true) { /* [column]*/
     $mysqli = getConnection();
 
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=?");
     $stmt->bind_param('s', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
     $stmt->fetch();
 
     $user = array();
@@ -93,15 +93,15 @@ function getUserByName($id, $emaild=true) {
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
-    $user['icon'] = getProfileImage($username_n);
+    $user['icon'] = profileImageExists($icon_n);
 
     return $user;
 }
 
-/* Get URL to profile image by username */
-function getProfileImage($username) {
-    $icon = '/assets/user-icons/' . md5(md5(strtolower($username))) . '.png';
-    return (file_exists($_SERVER['DOCUMENT_ROOT'] . $icon) ? $icon : '/assets/user-icons/default.png');
+/* Check if profile icon exists or return the default one */
+function profileImageExists($icon) {
+    $default = '/assets/user-icons/default.png';
+    return (!gone($icon) ? (file_exists($_SERVER['DOCUMENT_ROOT'] . $icon) ? $icon : $default) : $default);
 }
 
 /* obselete. see:getUser */
@@ -129,15 +129,24 @@ function setSettings($id, $description, $languages, $location) {
     $stmt->execute() or die("Error: Failed to save settings.");
 }
 
+/* sets the url to the profile image */
+function setProfileImage($id, $url) {
+    $mysqli = getConnection();
+
+    $stmt = $mysqli->prepare("UPDATE `users` SET `icon`=? WHERE `id`=?");
+    $stmt->bind_param('si', $url, $id);
+    $stmt->execute() or die("Error: Failed to save settings.");
+}
+
 /* logs in the user */
-function login($username_or_email, $password_real) {
+function login($username_or_email, $password_real) { /* [column]*/
     $mysqli = getConnection();
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=? OR `email`=?");
     $stmt->bind_param('ss', $username_or_email, $username_or_email) or die("Error: Failed to bind params first time");
     $stmt->execute() or die("Error: Failed to select user");
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location, $rank);
+    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location, $rank, $icon);
     while ($stmt->fetch() ) {
         if(isBruteForcing($id, MAX_LOGIN_ATTEMPTS)) {
             return 4;
@@ -170,7 +179,7 @@ function login($username_or_email, $password_real) {
                 $_SESSION['html_language'] = htmlspecialchars($languages);
                 $_SESSION['location'] = $location;
                 $_SESSION['html_location'] = htmlspecialchars($location);
-                $_SESSION['icon'] = getProfileImage($username_n);
+                $_SESSION['icon'] = profileImageExists($icon);
 
                 return 0; // success
             } else {
@@ -351,7 +360,7 @@ function getChannels() {
 }
 
 /* returns a list of users who program in a language */
-function getUsersByLanguage($language) {
+function getUsersByLanguage($language) { /* [column]*/
     $arr = array();
 
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
@@ -361,7 +370,7 @@ function getUsersByLanguage($language) {
     $stmt->execute();
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location, $rank);
+    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location, $rank, $icon);
     while ($stmt->fetch()) {
         $arr[] = array(
             "id"=>$id,
@@ -372,7 +381,7 @@ function getUsersByLanguage($language) {
             "location"=>$location,
             "languages"=>$languages,
             "rank"=>intval($rank),
-            "icon"=>getProfileImage($username)
+            "icon"=>profileImageExists($icon)
         );
     }
 
@@ -380,7 +389,7 @@ function getUsersByLanguage($language) {
 }
 
 /* Returns the past 500 users. TODO: Make function more flexible and have more features */
-function getUsers() {
+function getUsers() { /* [column]*/
     $arr = array();
 
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
@@ -389,7 +398,7 @@ function getUsers() {
     $stmt->execute();
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location, $rank);
+    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location, $rank, $icon);
     while ($stmt->fetch()) {
         $arr[] = array(
             "id"=>$id,
@@ -400,7 +409,7 @@ function getUsers() {
             "location"=>$location,
             "languages"=>$languages,
             "rank"=>intval($rank),
-            "icon"=>getProfileImage($username)
+            "icon"=>profileImageExists($icon)
         );
     }
 
@@ -435,7 +444,7 @@ function isChannelExistant($id) {
 
 /* returns a boolean; whether or not a string has content */
 function gone($var) {
-    return ($var == '' || $var == NULL) ? true : false;
+    return (!isset($var) || $var == '' || $var == NULL) ? true : false;
 }
 
 /* logs the user out */
@@ -461,7 +470,7 @@ function getCSRFToken() {
 
 /* generates a CSRF token */
 function generateCSRFToken() {
-    $_SESSION['csrf'] = md5(rand() . uniqid(rand(), true) . rand());
+    $_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
 }
 
 /* checks if a CSRF token is valid and returns true or false */
@@ -478,7 +487,7 @@ function printCSRFToken() {
 function usernameExists($username) {
     $mysqli = getConnection();
     $username = strtolower($username);
-    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE lower(`username`)=?");
+    $stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE lower(`username`)=?");
     $stmt->bind_param('s', $username);
     $stmt->execute();
     $stmt->store_result();

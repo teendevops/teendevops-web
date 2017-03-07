@@ -22,7 +22,7 @@
                         /* Generates random filename and extension */
                         function tempnam_sfx($path, $suffix) {
                             do {
-                                $file = $path . "/" . md5(md5(strtolower($_SESSION['username']))) . $suffix; // doesn't need to be cryptographically secure
+                                $file = $path . "/" . preg_replace("/[^A-Za-z0-9 ]/", '', bin2hex(openssl_random_pseudo_bytes(16))) . $suffix; // doesn't need to be cryptographically secure
                                 //unlink(getcwd() . $file) or die("Failed to delete old");
                                 $fp = @fopen($file, 'x');
                             }
@@ -70,6 +70,7 @@
 
                         /* Upload the file to a secure directory with the new name and extension */
                         if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadfile)) {
+                            setProfileImage($_SESSION['id'], '/' . $uploadfile);
                             echo '<div class="alert alert-success">
                                   <strong>Success!</strong> Your <a href="/profile/' . htmlspecialchars($_SESSION['username']) . '/">profile</a> has been updated.
                                 </div>';

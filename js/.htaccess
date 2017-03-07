@@ -1,0 +1,8 @@
+Options -Indexes
+ErrorDocument 403 /403.html
+ErrorDocument 404 /403.html
+
+# 1 WEEK
+<FilesMatch "\.(jpg|jpeg|png|gif|swf|js|css)$">
+Header set Cache-Control "max-age=302400, public"
+</FilesMatch>
