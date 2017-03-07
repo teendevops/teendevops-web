@@ -24,7 +24,7 @@
                         $array = getChannels();
 
                         foreach($array as $channel)
-                            echo "<a " . ($channel['id'] != $_GET['channel'] ? 'style="color:#008000"' : 'style="font-weight: bold;color:#006400"') . " href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
+                        echo "<a " . ($channel['id'] != $_GET['channel'] ? 'style="color:#008000"' : 'style="font-weight: bold;color:#006400"') . " href=\"/chat/" . htmlspecialchars($channel['id']) . "/\">#" . htmlspecialchars($channel['title']) . "</a><br>";
                     ?>
                 </div>
                 <div id="chatWindow" class="col-sm-9" style="font-family: opensansemoji;"></div>
