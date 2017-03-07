@@ -12,9 +12,11 @@
         <?php
             if($_SERVER['REQUEST_METHOD'] == "POST") {
                 if(isset($_POST['csrf']) && checkCSRFToken($_POST['csrf'])) {
+                    $success = false;
                     if(!isLanguageValid($_POST['languages']))
                         $_POST['languages'] = "None";
                     setSettings($_SESSION['id'], $_POST['description'], $_POST['languages'], $_POST['locationx']);
+                    $success = true;
 
                     if(!empty($_FILES['image']) && $_FILES['image']['error'] == 0) {
                         $uploaddir = 'assets/user-icons/';
@@ -71,15 +73,18 @@
                         /* Upload the file to a secure directory with the new name and extension */
                         if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadfile)) {
                             setProfileImage($_SESSION['id'], '/' . $uploadfile);
-                            echo '<div class="alert alert-success">
-                                  <strong>Success!</strong> Your <a href="/profile/' . htmlspecialchars($_SESSION['username']) . '/">profile</a> has been updated.
-                                </div>';
+                            $success = true;
                         } else {
                             echo '<div class="alert alert-danger">
                                     <strong>Whoops!</strong> Something went wrong.
                                   </div>';
                         }
                     }
+
+                    if($success)
+                        echo '<div class="alert alert-success">
+                              <strong>Success!</strong> Your <a href="/profile/' . htmlspecialchars($_SESSION['username']) . '/">profile</a> has been updated.
+                            </div>';
                 } else {
                     echo '  <div class="alert alert-danger">
                               <strong>Error:</strong> Invalid CSRF token.
