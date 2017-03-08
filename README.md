@@ -2,7 +2,9 @@
 [![Build Status](https://travis-ci.com/Arinerron/codeday-team.svg?token=xRJQhWcuhJai95gtzHzi&branch=master)](https://travis-ci.com/Arinerron/codeday-team)
 
 # About
-The reason why this was called "codeday-team" is because I didn't have a name for it, and I was developing it for/at CodeDay.  I renamed it when @eviltak found a name for it.
+teendevops aims to create an scalable and open-source platform on which teenagers who share similar interests in information technology can connect, communicate, and collaborate with each other.
+
+You can check out the project requirements [here](https://github.com/Arinerron/teendevops/blob/master/REQUIREMENTS.md).
 
 # Documentation
 - You can access the REST API documentation in the file [/api/v1/README.md](https://github.com/Arinerron/teendevops/blob/master/api/v1/README.md).
@@ -31,5 +33,12 @@ Please don't reuse a password on either of these sites yet. Neither of them use 
 # Checking syntax
 1. Execute the script `syntax.sh`
 2. If there is no syntax error, it will return a success message. Otherwise, it will print the error.
+
+# Thanks to...
+- @eviltak - Came up with the name `teendevops` and helped a lot with planning
+- @DudmasterUltra - Wrote a Java API for teendevops and helped brainstorming
+- @virtualdxs - Web hosting for development
+- @Gwiddle - Web hosting for production
+- [All of the developers and users that were not mentioned](https://github.com/Arinerron/teendevops/graphs/contributors)...
 
 [flag](ur-a_r3adme_reader)
