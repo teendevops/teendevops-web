@@ -44,7 +44,7 @@
                 <div class="col-sm-9">
                     <center>
                         <h2>Description</h2>
-                        <div class="aboutme">
+                        <div class="aboutme" style="font-family:opensansemoji;">
                             <?php
                                 echo "<h3>" . htmlspecialchars($user['description']) . "</h3>";
                                 if($print)
