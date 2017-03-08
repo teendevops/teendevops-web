@@ -34,4 +34,4 @@ The projects' profiles will:
 * potentially support "up-voting" of projects
 
 # Miscellaneous
-teendevops will host a variety of other "sub-projects", including a ctf competition for the users. The sub-projects will be announced on the main page. Another potential project is a bug bounty once out of development stages.
+teendevops will host a variety of other "sub-projects", including a ctf competition for the users. The sub-projects will be announced on the main page. Another potential project is a [bug bounty program](https://en.wikipedia.org/wiki/Bug_bounty_program) once out of development stages.
