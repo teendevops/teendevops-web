@@ -6,7 +6,7 @@ if [ ! "$BASH_VERSION" ] ; then
     exit 0;
 fi;
 
-echo "Welcome to codeday-team!";
+echo "Welcome to teendevops!";
 echo -n "Please enter the MySQL host (default: localhost):";
 read host;
 host=${host:-localhost};
@@ -24,7 +24,7 @@ sed "s/\"PASSWORD\", \"\"/\"PASSWORD\", \"$password\"/g" includes/config.php > i
 mv includes/config_change.php includes/config.php;
 sed "s/\"HOST\", \"localhost\"/\"HOST\", \"$host\"/g" includes/config.php > includes/config_change.php;
 mv includes/config_change.php includes/config.php;
-mysql -u "$(echo $username)" -p"$(echo $password)" < ./codeday-team.sql;
+mysql -u "$(echo $username)" -p"$(echo $password)" < ./teendevops.sql;
 echo "Configuration complete. For further configuration options, check the config file includes/config.php";
 unset username;
 unset password;
