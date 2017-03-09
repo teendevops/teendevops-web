@@ -1,6 +1,6 @@
 @font-face {
    font-family: opensansemoji;
-   src: url("/assets/opensansemoji.ttf");
+   src: url("/fonts/opensansemoji.ttf");
 }
 
 .error {
