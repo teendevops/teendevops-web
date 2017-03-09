@@ -58,5 +58,10 @@
     <body>
         <br>
         <?php echo $page; ?>
+        <script>
+            window.onload = function() {
+                document.getElementById("username").focus();
+            };
+        </script>
     </body>
 </html>

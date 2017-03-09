@@ -87,5 +87,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                 }
             }
         ?>
+        <script>
+            window.onload = function() {
+                document.getElementById("username").focus();
+            };
+        </script>
     </body>
 </html>
