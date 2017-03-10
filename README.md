@@ -8,8 +8,12 @@ Simply create html files with sample content. For example, if you were designing
 * The type of design is really up to you. Material design or Paper would work.
 * In the section below that explains the pages that are needed to be designed, please note that the `Content:` is only suggested content. If you can think of any ideas or don't think something belongs, you can totally add/remove it. In fact, change is good. Please try to add or remove things to make it different. :)
 * It would be really awesome if you didn't use any dependencies like Bootstrap (jQuery&Ajax is fine though). This one is optional, but still. It would be great.
+* Font can be your choice. Whatever the font is in the chat though, it needs to support emojis.
+* Please use glyphicons in menus when possible. Just be consistent though. You're a web designer. I'm certain you'll know when and where they belong.
 
 **These are the pages that are needed:**
+* navbar.html
+  * There are actually two navbars; when you are logged in and when you are not. You can check out teendevops' current navbar to see an example, but please, _please_ design something better than that one. It is very inefficient and it has too much empty space. But at least you can get an idea of what you need to make from there.
 * index.html
   * This is the main page that is displayed when a user visits https://teendevops.net/
   * Content:
@@ -54,4 +58,18 @@ Simply create html files with sample content. For example, if you were designing
     * A submit button (if these settings aren't on the profile)
 * chat.html
   * You ready? This is the hard one. Here's the challenge. The current one is available at https://teendevops.net/chat/, but this should not be used as an example. It is far to crude to 
+  * Content:
+    * The menu bar
+      * A small bar on top of the chat and channel panels
+      * This should contain the name of the channel and a dropdown. The dropdown contains things like "report chat", "leave chat", "chat settings", etc.
+    * The chat pannel
+      * A list of divs (which contain the message sender's username, the message, and a dropdown)
+      * The dropdown should contain "Report", "Delete", "Edit", etc. Not in that order per se.
+    * The form to post a message via ajax
+      * Should contain the basics-- A text area and a submit button.
+      * When the shift key is held, it puts a new line. Else, it sends the message
+    * The channel panel
+      * Contains a list of channels.
+      * When the mouse is scrolled over, it should display the channel description.
 
+Good luck. :)
