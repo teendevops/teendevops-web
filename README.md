@@ -10,6 +10,7 @@ Simply create html files with sample content. For example, if you were designing
 * It would be really awesome if you didn't use any dependencies like Bootstrap (jQuery&Ajax is fine though). This one is optional, but still. It would be great.
 * Font can be your choice. Whatever the font is in the chat though, it needs to support emojis.
 * Please use glyphicons in menus when possible. Just be consistent though. You're a web designer. I'm certain you'll know when and where they belong.
+* Note that the navbar (aka:header) will be included at the start of every page.
 
 **These are the pages that are needed:**
 * navbar.html
