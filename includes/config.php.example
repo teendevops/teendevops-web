@@ -10,7 +10,7 @@ define("SECURE", false); // FOR DEVELOPMENT ONLY! Set to false for development m
 define("DATABASE_HOST", "localhost");
 define("DATABASE_USER", "");
 define("DATABASE_PASSWORD", "");
-define("DATABASE_NAME", "codeday-team"); // todo:change
+define("DATABASE_NAME", "teendevops"); // todo:change
 
 /* LOGIN AND REGISTRATION CONFIGURATION */
 define("CAN_LOGIN", true);
