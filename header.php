@@ -80,4 +80,11 @@
 
     <script src="/js/jquery.js" crossorigin="anonymous"></script>
     <script src="/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<?php
+if(isset($_COOKIE['dark'])){
+    $cookie = $_COOKIE['dark'];
+	if($cookie == 'true')
+	    echo '<link rel="stylesheet" href="/css/dark.css">';
+}
+?>
 </head>

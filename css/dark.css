@@ -1,0 +1,187 @@
+div.collapse.navbar-collapse.navbar-menubuilder {
+    background-color: #000000;
+}
+
+ul.nav.navbar-nav.navbar-left li a {
+    background-color: #000000;
+    color: #00f230;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+a.navbar-brand {
+    background-color: #000000;
+    color: #078f00;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+div.col-lg-12.text-center.v-center {
+    background-color: #000000;
+    color: #00ff3c;
+}
+
+button.btn.btn-lg.btn-primary {
+    background-color: #000000;
+    border-color: #0dff00;
+}
+
+input.form-control.input-lg {
+    border-color: #00ff26;
+    background-color: #000000;
+    color: #00ff26;
+}
+
+ html body {
+    background-color: #000000;
+}
+
+div.container-fluid {
+    background-color: #000000;
+}
+
+fieldset center legend {
+    border-color: #00ff3c;
+    color: #0dff00;
+    font-family: monospace;
+}
+
+label.col-md-4.control-label {
+    color: #00ff51;
+    font-family: monospace;
+}
+
+input.form-control.input-md {
+    background-color: #000000;
+    border-color: #00ff51;
+    color: #00ff11;
+    font-family: monospace;
+}
+
+span.help-block {
+    color: #38633d;
+}
+
+div.row {
+    background-color: #000000;
+}
+
+div.col-sm-3 center {
+    background-color: #000000;
+    color: #38a800;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+center h2 a {
+    color: #40ff00;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+div.col-lg-12.text-center.v-center h1 {
+    font-family: monospace;
+}
+
+body center h1 {
+    color: #00ff51;
+    font-family: monospace;
+}
+
+textarea.form-control {
+    background-color: #000000;
+    color: #00ff26;
+    border-color: #00ff84;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+select.form-control {
+    background-color: #000000;
+    color: #22ff00;
+    border-color: #2bff00;
+    font-family: monospace;
+}
+
+input.file {
+    color: #00f700;
+    border-color: #00ff6f;
+    background-color: #000000;
+    font-family: monospace;
+}
+
+button.btn.btn-primary {
+    background-color: #00ff11;
+    color: #000000;
+    font-family: monospace;
+}
+
+center h1 a {
+    color: #00ff59;
+}
+
+div.aboutme h3 {
+    font-family: monospace;
+    font-size: 16px;
+}
+
+div.col-sm-9 {
+    background-color: #000000;
+    color: #40ff00;
+    font-family: monospace;
+}
+
+div.col-sm-9 center h2 {
+    font-family: monospace;
+}
+
+h2.lang {
+    background-color: #1f1f1f;
+}
+
+div.col-sm-9 b a {
+    color: #15ff00;
+    font-weight: bold;
+    border-width: 1px;
+    border-color: #00ff26;
+    border-style: solid;
+    padding: 2px;
+}
+
+div.col-xs-12 {
+    background-color: #2e2e2e;
+    color: #00ff00;
+}
+
+#sofar {
+    background-color: #000000;
+    color: #00ff00;
+    border-color: #55ff00;
+}
+
+div.col-md-1 input {
+    background-color: #000000;
+    color: #00ff3c;
+    border-color: #2bff00;
+}
+
+center form input {
+    background-color: #000000;
+    color: #00ff66;
+    border-color: #00ff77;
+}
+
+body center code {
+    background-color: #292929;
+}
+
+body center a {
+    color: #00ff11;
+}
+
+body center {
+    font-family: monospace;
+    color: #3f7537;
+}
+
+
