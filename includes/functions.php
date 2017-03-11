@@ -39,7 +39,7 @@ function toAbsoluteURL($relative) {
 function register($username, $email, $password) { /* [column]*/
     $mysqli = getConnection();
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`, `rank`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0', '/assets/user-icons/default.png')");
+    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`, `rank`, `icon`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0', '/assets/user-icons/default.png')");
     $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
     $stmt->execute();
 }

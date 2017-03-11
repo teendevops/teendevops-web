@@ -25,7 +25,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-
+    <link rel=icon href=/favicon.png>
     <nav>
         <div id="custom-bootstrap-menu" class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container-fluid">
