@@ -1,187 +1,187 @@
 div.collapse.navbar-collapse.navbar-menubuilder {
-    background-color: #000000;
+    background-color: #000000 !important;
 }
 
 ul.nav.navbar-nav.navbar-left li a {
-    background-color: #000000;
-    color: #00f230;
-    font-family: monospace;
-    font-size: 16px;
+    background-color: #000000 !important;
+    color: #00f230 !important;
+    font-family: monospace !important;
+    font-size: 16px !important;
 }
 
 a.navbar-brand {
-    background-color: #000000;
-    color: #078f00;
-    font-family: monospace;
-    font-size: 16px;
+    background-color: #000000 !important;
+    color: #078f00 !important;
+    font-family: monospace !important;
+    font-size: 16px !important;
 }
 
 div.col-lg-12.text-center.v-center {
-    background-color: #000000;
-    color: #00ff3c;
+    background-color: #000000 !important;
+    color: #00ff3c !important;
 }
 
 button.btn.btn-lg.btn-primary {
-    background-color: #000000;
-    border-color: #0dff00;
+    background-color: #000000 !important;
+    border-color: #0dff00 !important;
 }
 
 input.form-control.input-lg {
-    border-color: #00ff26;
-    background-color: #000000;
-    color: #00ff26;
+    border-color: #00ff26 !important;
+    background-color: #000000 !important;
+    color: #00ff26 !important;
 }
 
  html body {
-    background-color: #000000;
+    background-color: #000000 !important;
 }
 
 div.container-fluid {
-    background-color: #000000;
+    background-color: #000000 !important;
 }
 
 fieldset center legend {
-    border-color: #00ff3c;
-    color: #0dff00;
-    font-family: monospace;
+    border-color: #00ff3c !important;
+    color: #0dff00 !important;
+    font-family: monospace !important;
 }
 
 label.col-md-4.control-label {
-    color: #00ff51;
-    font-family: monospace;
+    color: #00ff51 !important;
+    font-family: monospace !important;
 }
 
 input.form-control.input-md {
-    background-color: #000000;
-    border-color: #00ff51;
-    color: #00ff11;
-    font-family: monospace;
+    background-color: #000000 !important;
+    border-color: #00ff51 !important;
+    color: #00ff11 !important;
+    font-family: monospace !important;
 }
 
 span.help-block {
-    color: #38633d;
+    color: #38633d !important;
 }
 
 div.row {
-    background-color: #000000;
+    background-color: #000000 !important;
 }
 
 div.col-sm-3 center {
-    background-color: #000000;
-    color: #38a800;
-    font-family: monospace;
-    font-size: 12px;
+    background-color: #000000 !important;
+    color: #38a800 !important;
+    font-family: monospace !important;
+    font-size: 12px !important;
 }
 
 center h2 a {
-    color: #40ff00;
-    font-weight: bold;
-    font-family: monospace;
+    color: #40ff00 !important;
+    font-weight: bold !important;
+    font-family: monospace !important;
 }
 
 div.col-lg-12.text-center.v-center h1 {
-    font-family: monospace;
+    font-family: monospace !important;
 }
 
 body center h1 {
-    color: #00ff51;
-    font-family: monospace;
+    color: #00ff51 !important;
+    font-family: monospace !important;
 }
 
 textarea.form-control {
-    background-color: #000000;
-    color: #00ff26;
-    border-color: #00ff84;
-    font-family: monospace;
-    font-size: 12px;
+    background-color: #000000 !important;
+    color: #00ff26 !important;
+    border-color: #00ff84 !important;
+    font-family: monospace !important;
+    font-size: 12px !important;
 }
 
 select.form-control {
-    background-color: #000000;
-    color: #22ff00;
-    border-color: #2bff00;
-    font-family: monospace;
+    background-color: #000000 !important;
+    color: #22ff00 !important;
+    border-color: #2bff00 !important;
+    font-family: monospace !important;
 }
 
 input.file {
-    color: #00f700;
-    border-color: #00ff6f;
-    background-color: #000000;
-    font-family: monospace;
+    color: #00f700 !important;
+    border-color: #00ff6f !important;
+    background-color: #000000 !important;
+    font-family: monospace !important;
 }
 
 button.btn.btn-primary {
-    background-color: #00ff11;
-    color: #000000;
-    font-family: monospace;
+    background-color: #00ff11 !important;
+    color: #000000 !important;
+    font-family: monospace !important;
 }
 
 center h1 a {
-    color: #00ff59;
+    color: #00ff59 !important;
 }
 
 div.aboutme h3 {
-    font-family: monospace;
-    font-size: 16px;
+    font-family: monospace !important;
+    font-size: 16px !important;
 }
 
 div.col-sm-9 {
-    background-color: #000000;
-    color: #40ff00;
-    font-family: monospace;
+    background-color: #000000 !important;
+    color: #40ff00 !important;
+    font-family: monospace !important;
 }
 
 div.col-sm-9 center h2 {
-    font-family: monospace;
+    font-family: monospace !important;
 }
 
 h2.lang {
-    background-color: #1f1f1f;
+    background-color: #1f1f1f !important;
 }
 
 div.col-sm-9 b a {
-    color: #15ff00;
-    font-weight: bold;
-    border-width: 1px;
-    border-color: #00ff26;
-    border-style: solid;
-    padding: 2px;
+    color: #15ff00 !important;
+    font-weight: bold !important;
+    border-width: 1px !important;
+    border-color: #00ff26 !important;
+    border-style: solid !important;
+    padding: 2px !important;
 }
 
 div.col-xs-12 {
-    background-color: #2e2e2e;
-    color: #00ff00;
+    background-color: #2e2e2e !important;
+    color: #00ff00 !important;
 }
 
 #sofar {
-    background-color: #000000;
-    color: #00ff00;
-    border-color: #55ff00;
+    background-color: #000000 !important;
+    color: #00ff00 !important;
+    border-color: #55ff00 !important;
 }
 
 div.col-md-1 input {
-    background-color: #000000;
-    color: #00ff3c;
-    border-color: #2bff00;
+    background-color: #000000 !important;
+    color: #00ff3c !important;
+    border-color: #2bff00 !important;
 }
 
 center form input {
-    background-color: #000000;
-    color: #00ff66;
-    border-color: #00ff77;
+    background-color: #000000 !important;
+    color: #00ff66 !important;
+    border-color: #00ff77 !important;
 }
 
 body center code {
-    background-color: #292929;
+    background-color: #292929 !important;
 }
 
 body center a {
-    color: #00ff11;
+    color: #00ff11 !important;
 }
 
 body center {
-    font-family: monospace;
-    color: #3f7537;
+    font-family: monospace !important;
+    color: #3f7537 !important;
 }
 
 
