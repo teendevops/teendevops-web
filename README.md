@@ -11,7 +11,7 @@ You can check out the project requirements [here](https://github.com/Arinerron/t
 - The code is documented with comments
 
 # Live Version
-Please don't reuse a password on either of these sites yet. Neither of them use HTTPS, so neither of them are considered fully secure.
+Please don't reuse a password on Development (though you shouldn't ever reuse passwords). Development does not use HTTPS, so it is not considered fully secure.
 ## Production
 - Thanks to @Gwiddle Web Hosting, we now have a prod version here: http://teendevops.net
 ## Development
