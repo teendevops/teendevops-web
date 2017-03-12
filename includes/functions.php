@@ -138,6 +138,24 @@ function setProfileImage($id, $url) {
     $stmt->execute() or die("Error: Failed to save settings.");
 }
 
+/* sets a user to banned or not */
+function setBanned($id, $banned) {
+    $mysqli = getConnection();
+
+    $stmt = $mysqli->prepare("UPDATE `users` SET `banned`=? WHERE `id`=?");
+    $stmt->bind_param('si', $banned, $id);
+    $stmt->execute() or die("Error: Failed to save settings.");
+}
+
+/* sets a user's rank' */
+function setRank($id, $rank) {
+    $mysqli = getConnection();
+
+    $stmt = $mysqli->prepare("UPDATE `users` SET `rank`=? WHERE `id`=?");
+    $stmt->bind_param('ii', $rank, $id);
+    $stmt->execute() or die("Error: Failed to save settings.");
+}
+
 /* logs in the user */
 function login($username_or_email, $password_real) { /* [column]*/
     $mysqli = getConnection();
@@ -149,12 +167,12 @@ function login($username_or_email, $password_real) { /* [column]*/
     $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location, $rank, $icon);
     while ($stmt->fetch() ) {
         if(isBruteForcing($id, MAX_LOGIN_ATTEMPTS)) {
-            return 4;
+            return 4; // brute forcing warning
         } else if($banned == 'true') {
-            return 2;
+            return 2; // yo banned!
         } else {
             $success = password_verify($password_real, $password);
-            loginAttempt($mysqli, $id, $success);
+            loginAttempt($mysqli, $id, $success); // store the login attempt
 
             if($success) {
                 session_regenerate_id(true);
@@ -206,7 +224,7 @@ function getRank($rank) {
 /* store the login attempt */
 function loginAttempt($mysqli, $id, $success) {
     $sc = ($success) ? 'true' : 'false';
-    $forwarded = (gone($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] !== NULL) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : "undefined";
+    $forwarded = (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] !== NULL) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : "undefined";
     $stmt = $mysqli->prepare("INSERT INTO `login_attempts` (`id`, `time`, `ip`, `insecure_ip`, `success`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)") or die("Error: Failed to prepare statement @ login_attempts");
     $stmt->bind_param('isss', $id, $_SERVER['REMOTE_ADDR'], $forwarded, $sc) or die("Error: Failed to login bind param.");
 
