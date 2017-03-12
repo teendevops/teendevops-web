@@ -58,6 +58,7 @@
     <body>
         <br>
         <?php echo $page; ?>
+        <center>Forgot your password? <a href="/reset/">No problem.</a></center>
         <script>
             window.onload = function() {
                 document.getElementById("username").focus();

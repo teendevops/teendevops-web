@@ -31,7 +31,7 @@ function sec_session_start() {
 }
 
 /* returns the absolute url if possible */
-function toAbsoluteURL($relative) {
+function toAbsoluteURL($request) {
     return ((!gone(HTTPS) ? 'https' : 'http') .'://' . (!gone(SITE) ? SITE : (!gone($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : (!gone($_SERVER['SERVER_NAME']) ?$_SERVER['SERVER_NAME'] : 'localhost'))) .(substr($request, 0, 1) !== '/' ? '/' : '') . $request);
 }
 
@@ -76,6 +76,33 @@ function getUserByName($id, $emaild=true) { /* [column]*/
     $mysqli = getConnection();
 
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=?");
+    $stmt->bind_param('s', $id);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
+    $stmt->fetch();
+
+    $user = array();
+    $user['id'] = $id_n;
+    $user['username'] = $username_n;
+    if($emaild)
+        $user['email'] = $email_n;
+    //$user['name'] = $name_n;
+    $user['rank'] = intval($rank_n);
+    $user['banned'] = boolval($banned_n);
+    $user['description'] = $description_n;
+    $user['languages'] = $languages_n;
+    $user['location'] = $location_n;
+    $user['icon'] = profileImageExists($icon_n);
+
+    return $user;
+}
+
+/* returns an array with information about the given user */
+function getUserByEmail($id, $emaild=true) { /* [column]*/
+    $mysqli = getConnection();
+
+    $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `email`=?");
     $stmt->bind_param('s', $id);
     $stmt->execute();
     $stmt->store_result();
@@ -207,6 +234,71 @@ function login($username_or_email, $password_real) { /* [column]*/
     }
 
     return 3; // unknown error
+}
+
+/* generate a cryptographically secure token */
+function generateSecureCrypto($length) {
+    return bin2hex(openssl_random_pseudo_bytes($length));
+}
+
+/* insert a new reset password token into the db */
+function generateResetPasswordToken($id) {
+    $token = generateSecureCrypto(32);
+
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+
+    $stmt = $mysqli->prepare("INSERT INTO `resetkeys` (`id`, `time`, `ip`, `token`) VALUES (?, CURRENT_TIMESTAMP, ?, ?)") or die("Error: Failed to prepare statement @ reset_token");
+    $stmt->bind_param('iss', $id, $_SERVER['REMOTE_ADDR'], $token) or die("Error: Failed to login bind param.");
+    $stmt->execute() or die("Error: Failed to save token to database.");
+    return $token;
+}
+
+/* checks if a password reset token is valid */
+function validResetPasswordToken($id, $token) {
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+	$stmt = $mysqli->prepare("SELECT * FROM `resetkeys` WHERE `time`>(NOW() - INTERVAL 5 HOUR) AND `id`=? AND `token`=?"); // maybe check if IP is correct? idk
+	$stmt->bind_param ('is', $id, $token);
+	$stmt->execute() or die("Error: Failed to execute reset password query");
+	$stmt->store_result();
+
+	if ($stmt->num_rows != 0)
+		return true;
+	return false;
+}
+
+/* invalidates password reset tokens */
+function invalidateResetPasswordToken($id) {
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+	$stmt = $mysqli->prepare("DELETE FROM `resetkeys` WHERE `id`=?");
+	$stmt->bind_param ('i', $id);
+	$stmt->execute() or die("Error: Failed to execute delete reset password query");
+}
+
+/* sets a new password on an account */
+function setPassword($id, $password) {
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+    $stmt = $mysqli->prepare("UPDATE `users` SET `password`=? WHERE `id`=?");
+    $stmt->bind_param('si', $password_hash, $id);
+    $stmt->execute() or die("Error: Failed to save settings.");
+}
+
+/* send email */
+function sendEmail($to, $fromname, $from, $subject, $body) {
+    $headers  = "Reply-To: " . $from . " \r\n";
+    $headers .= "Return-Path: " . $from . " \r\n";
+    $headers .= "From: \"" . $fromname ."\" <" . $from ."> \r\n";
+    $headers .= "Organization: " . $fromname . "\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+    $headers .= "Content-Transfer-Encoding: binary";
+    $headers .= "X-Priority: 3\r\n";
+    $headers .= "X-Mailer: PHP" . phpversion() . "\r\n";
+
+    if(mail($to, $subject, $body, $headers))
+        return true;
+    return false;
 }
 
 /* convert rank to string */
@@ -488,7 +580,7 @@ function getCSRFToken() {
 
 /* generates a CSRF token */
 function generateCSRFToken() {
-    $_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
+    $_SESSION['csrf'] = generateSecureCrypto(32);
 }
 
 /* checks if a CSRF token is valid and returns true or false */
