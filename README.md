@@ -1,5 +1,5 @@
 # Status
-[![Build Status](https://travis-ci.com/Arinerron/codeday-team.svg?token=xRJQhWcuhJai95gtzHzi&branch=master)](https://travis-ci.com/Arinerron/codeday-team)
+[![Build Status](https://travis-ci.org/teendevops/teendevops.net.svg?branch=master)](https://travis-ci.org/teendevops/teendevops.net)
 
 # About
 teendevops aims to create an scalable and open-source platform on which teenagers who share similar interests in information technology can connect, communicate, and collaborate with each other.
