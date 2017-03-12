@@ -72,5 +72,6 @@ Simply create html files with sample content. For example, if you were designing
     * The channel panel
       * Contains a list of channels.
       * When the mouse is scrolled over, it should display the channel description.
+  * You can see more feature ideas and things here: https://github.com/teendevops/teendevops.net/projects/4
 
 Good luck. :)
