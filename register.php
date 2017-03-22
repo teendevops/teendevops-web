@@ -44,7 +44,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         $password = $_POST['password'];
                         $confirm_password = $_POST['confirm_password'];
 
-                        if(strlen($password) < 6) {
+                        if(strlen($password) < 8) {
                             echo error(ERROR_SHORT_PASSWORD);
                         } else {
                             if(strlen($username) < 4 || strlen($username) > 20) {
@@ -69,9 +69,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                                                         echo error(ERROR_EMAIL_TAKEN);
                                                     } else { // TODO: Check for brute forcing
                                                        register($username, $email, $password);
-                                                       login($username, $password);
-                                                       header("Location: " . toAbsoluteURL('index/'));
-                                                       echo "<script>window.location.replace(\"/\");</script>";
+
+                                                       /*
+                                                        * Guess what you just found?
+                                                        * 096B1C113102FC76DB8AEA8BB7C2086B016E1154F678006574
+                                                        *
+                                                        * obvious hint: that string is pretty "crappy"
+                                                        */
+
+                                                       $user = getUserByName($username);
+                                                       $id = $user['id'];
+                                                       $token = generateToken($id, 2);
+                                                       $url = toAbsoluteURL('/verify/?token=' . $token . '&id=' . $id);
+                                                       sendEmail($user['email'], 'teendevops', 'info@teendevops.net', 'Welcome to teendevops!', 'To verify that you (<b>' . $username . '</b>) own this email address, please click the below link:
+                                                           <br><a href="' . $url . '">' . $url . '</a><br><br>If you did not register this account, you can safely ignore this email. Only someone who has access to your email can verify the user.  If you have any questions, please let us know by responding to this email.<br><br>Thanks,<br>    the teendevops team');
+                                                       echo '<center><h1>Just one more step...</h1>Please check the email address <b>' . htmlspecialchars($email) . '</b> for an email from teendevops to verify your account.<br>If you do not recieve the email within twenty minutes, try <a href="/login/">logging in</a> to re-send a verification email.</center>';
                                                        die();
                                                     }
                                                 }

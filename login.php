@@ -25,18 +25,26 @@
                     $password = $_POST['password'];
 
                     $status = login($username_or_email, $password);
-
                     if($status == 0) {
                         header("Location: " . toAbsoluteURL('/'));
                         $page .= "<script>window.location.replace(\"/\");</script></body></html>";
                     } else if($status == 1) {
                         $page .= error(ERROR_PASSWORD_INCORRECT);
-                    } else if($status == 2){
+                    } else if($status == 2) {
                         $page .= error(ERROR_ACCOUNT_BANNED);
                     } else if($status == 3) {
                         $page .= error(ERROR_PASSWORD_INCORRECT);
                     } else if($status == 4) {
                         $page .= error(ERROR_ACCOUNT_LOCKOUT);
+                    } else if($status == 5) { // TODO: move to verify.php
+                        $user = getUser($_SESSION['id_unverified']);
+                        $id = $user['id'];
+                        $token = generateToken($id, 2);
+                        $url = toAbsoluteURL('/verify/?token=' . $token . '&id=' . $id);
+                        sendEmail($user['email'], 'teendevops', 'info@teendevops.net', 'Welcome to teendevops!', 'To verify that you (<b>' . $user['username'] . '</b>) own this email address, please click the below link:
+                            <br><a href="' . $url . '">' . $url . '</a><br><br>If you did not register this account, you can safely ignore this email. Only someone who has access to your email can verify the user.  If you have any questions, please let us know by responding to this email.<br><br>Thanks,<br>    the teendevops team');
+
+                        $page .= error("Another verification email has been dispatched. If you are having a problem, please contact us.");
                     } else {
                         $page .= error(ERROR_UNKNOWN_STATE);
                     }

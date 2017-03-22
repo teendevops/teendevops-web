@@ -17,7 +17,7 @@
                         // TODO: Work on preventing timing attacks
                         if(!gone($user['username'])) {
                             $id = $user['id'];
-                            $token = generateResetPasswordToken($id);
+                            $token = generateToken($id, 1);
                             $url = toAbsoluteURL('/reset/?token=' . $token . '&id=' . $id);
 
                             sendEmail($email, 'teendevops', 'info@teendevops.net', 'Forgotten Password Reset', 'Someone (hopefully you) requested a new password for the teendevops account <b>' . $user['username'] . '</b><br><br>If you own this account and you requested the reset, please click the link below:
@@ -36,19 +36,19 @@
                         $password = $_POST['password'];
                         $token = $_POST['token'];
 
-                        if(validResetPasswordToken($id, $token)) {
+                        if(validToken($id, 1, $token)) {
                             $ok = false;
                             $message = 'Password has been changed! Click <a href="/login/">here</a> to login.';
 
-                            if(strlen($password) < 6)
-                                $message = 'Please choose a password longer than 6 characters.';
+                            if(strlen($password) < 8)
+                                $message = 'Please choose a password longer than 8 characters.'; // todo: use strings
                             else if(!isPasswordSecure($password))
                                 $message = 'Please choose a stronger password.';
                             else
                                 $ok = true;
 
                             if($ok) {
-                                invalidateResetPasswordToken($id);
+                                invalidateToken($id, 1);
                                 setPassword($id, $password);
                                 echo '<center style="color:green">' . $message . '</center>';
                             } else {
@@ -67,7 +67,7 @@
             }
         } else { // HTTP GET
             if(isset($_REQUEST['token']) && isset($_REQUEST['id'])) { // second visit after clicking the email link
-                if(validResetPasswordToken($_REQUEST['id'], $_REQUEST['token'])) {
+                if(validToken($_REQUEST['id'], 1, $_REQUEST['token'])) {
                     echo "<form class=\"form-horizontal\" action=\"/reset/\" method=\"post\"> <fieldset> <!-- Form Name --> <center><legend>Reset Password</legend></center><!-- Text input--> <div class=\"form-group\"><label class=\"col-md-4 control-label\" for=\"password\">New Password</label> <div class=\"col-md-5\"> <input id=\"password\" name=\"password\" type=\"password\" placeholder=\"Enter a new password...\" class=\"form-control input-md\" required=\"\"> <span class=\"help-block\">Simply enter a new password.</span> </div> </div>  <!-- Button --> <div class=\"form-group\"> <label class=\"col-md-4 control-label\" for=\"reset\"></label> <div class=\"col-md-4\"> <button id=\"reset\" name=\"reset\" class=\"btn btn-primary\">Reset password</button> </div> </div> </fieldset> " . printCSRFToken();
                     echo '<input type="hidden" id="token" name="token" value="' . htmlspecialchars($_REQUEST['token']) . '">' . '<input type="hidden" id="id" name="id" value="' . htmlspecialchars($_REQUEST['id']) . '">' . " </form>";
                 } else {

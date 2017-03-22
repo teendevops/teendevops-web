@@ -17,7 +17,7 @@ function isSignedIn() {
 /* securely starts a new session */
 function sec_session_start() {
     $cookieParams = session_get_cookie_params();
-    session_set_cookie_params($cookieParams["lifetime"] + (60 * 60 * 24), // 1 hr extention
+    session_set_cookie_params($cookieParams["lifetime"] + (120960), // two weeks = 120960
                               $cookieParams["path"],
                               $cookieParams["domain"],
                              HTTPS, // secure
@@ -39,7 +39,7 @@ function toAbsoluteURL($request) {
 function register($username, $email, $password) { /* [column]*/
     $mysqli = getConnection();
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `description`, `languages`, `location`, `rank`, `icon`) VALUES (NULL, ?, ?, ?, ?, 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0', '/assets/user-icons/default.png')");
+    $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `verified`, `description`, `languages`, `location`, `rank`, `icon`) VALUES (NULL, ?, ?, ?, ?, 'false', 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0', '/assets/user-icons/default.png')");
     $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
     $stmt->execute();
 }
@@ -52,7 +52,7 @@ function getUser($id, $emaild=true) { /* [column]*/
     $stmt->bind_param('i', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $verified_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
     $stmt->fetch();
 
     $user = array();
@@ -63,6 +63,7 @@ function getUser($id, $emaild=true) { /* [column]*/
     //$user['name'] = $name_n;
     $user['rank'] = intval($rank);
     $user['banned'] = boolval($banned_n);
+    $user['verified'] = boolval($banned_n);
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
@@ -79,7 +80,7 @@ function getUserByName($id, $emaild=true) { /* [column]*/
     $stmt->bind_param('s', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $verified_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
     $stmt->fetch();
 
     $user = array();
@@ -90,6 +91,7 @@ function getUserByName($id, $emaild=true) { /* [column]*/
     //$user['name'] = $name_n;
     $user['rank'] = intval($rank_n);
     $user['banned'] = boolval($banned_n);
+    $user['verified'] = boolval($verified_n);
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
@@ -106,7 +108,7 @@ function getUserByEmail($id, $emaild=true) { /* [column]*/
     $stmt->bind_param('s', $id);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
+    $stmt->bind_result($id_n, $username_n, $password_n, $name_n, $email_n, $banned_n, $verified_n, $description_n, $languages_n, $location_n, $rank_n, $icon_n);
     $stmt->fetch();
 
     $user = array();
@@ -117,6 +119,7 @@ function getUserByEmail($id, $emaild=true) { /* [column]*/
     //$user['name'] = $name_n;
     $user['rank'] = intval($rank_n);
     $user['banned'] = boolval($banned_n);
+    $user['verified'] = boolval($verified_n);
     $user['description'] = $description_n;
     $user['languages'] = $languages_n;
     $user['location'] = $location_n;
@@ -184,24 +187,28 @@ function setRank($id, $rank) {
 }
 
 /* logs in the user */
-function login($username_or_email, $password_real) { /* [column]*/
+function login($username_or_email, $password_real, $skip = false) { /* [column]*/
     $mysqli = getConnection();
     $stmt = $mysqli->prepare("SELECT * FROM `users` WHERE `username`=? OR `email`=?");
     $stmt->bind_param('ss', $username_or_email, $username_or_email) or die("Error: Failed to bind params first time");
     $stmt->execute() or die("Error: Failed to select user");
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $description, $languages, $location, $rank, $icon);
+    $stmt->bind_result($id, $username, $password, $email, $name, $banned, $verified, $description, $languages, $location, $rank, $icon);
     while ($stmt->fetch() ) {
         if(isBruteForcing($id, MAX_LOGIN_ATTEMPTS)) {
             return 4; // brute forcing warning
         } else if($banned == 'true') {
             return 2; // yo banned!
+        } else if($verified == 'false') {
+            $_SESSION['id_unverified'] = $id;
+            return 5;
         } else {
-            $success = password_verify($password_real, $password);
-            loginAttempt($mysqli, $id, $success); // store the login attempt
+            $success = password_verify($password_real, $password); // TODO: timing attack via $skip?
+            if(!$skip)
+                loginAttempt($mysqli, $id, $success); // store the login attempt
 
-            if($success) {
+            if($success || $skip) {
                 session_regenerate_id(true);
                 sec_session_start();
 
@@ -241,23 +248,32 @@ function generateSecureCrypto($length) {
     return bin2hex(openssl_random_pseudo_bytes($length));
 }
 
-/* insert a new reset password token into the db */
-function generateResetPasswordToken($id) {
+/*
+ * Token types:
+ * 1 = password reset
+ * 2 = email verification
+ *
+ */
+
+/* insert a new token into the db */
+function generateToken($id, $type) {
+    invalidateToken($id, $type);
+
     $token = generateSecureCrypto(32);
 
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
 
-    $stmt = $mysqli->prepare("INSERT INTO `resetkeys` (`id`, `time`, `ip`, `token`) VALUES (?, CURRENT_TIMESTAMP, ?, ?)") or die("Error: Failed to prepare statement @ reset_token");
-    $stmt->bind_param('iss', $id, $_SERVER['REMOTE_ADDR'], $token) or die("Error: Failed to login bind param.");
+    $stmt = $mysqli->prepare("INSERT INTO `tokens` (`id`, `time`, `ip`, `type`, `token`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)") or die("Error: Failed to prepare statement @ reset_token");
+    $stmt->bind_param('isis', $id, $_SERVER['REMOTE_ADDR'], $type, $token) or die("Error: Failed to login bind param.");
     $stmt->execute() or die("Error: Failed to save token to database.");
     return $token;
 }
 
-/* checks if a password reset token is valid */
-function validResetPasswordToken($id, $token) {
+/* checks if a token is valid */
+function validToken($id, $type, $token) {
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
-	$stmt = $mysqli->prepare("SELECT * FROM `resetkeys` WHERE `time`>(NOW() - INTERVAL 5 HOUR) AND `id`=? AND `token`=?"); // maybe check if IP is correct? idk
-	$stmt->bind_param ('is', $id, $token);
+	$stmt = $mysqli->prepare("SELECT * FROM `tokens` WHERE `time`>(NOW() - INTERVAL 5 HOUR) AND `id`=? AND `type`=? AND `token`=?"); // maybe check if IP is correct? idk
+	$stmt->bind_param ('iis', $id, $type, $token);
 	$stmt->execute() or die("Error: Failed to execute reset password query");
 	$stmt->store_result();
 
@@ -266,11 +282,11 @@ function validResetPasswordToken($id, $token) {
 	return false;
 }
 
-/* invalidates password reset tokens */
-function invalidateResetPasswordToken($id) {
+/* invalidates tokens */
+function invalidateToken($id, $type) {
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
-	$stmt = $mysqli->prepare("DELETE FROM `resetkeys` WHERE `id`=?");
-	$stmt->bind_param ('i', $id);
+	$stmt = $mysqli->prepare("DELETE FROM `tokens` WHERE `id`=? AND `type`=?");
+	$stmt->bind_param ('ii', $id, $type);
 	$stmt->execute() or die("Error: Failed to execute delete reset password query");
 }
 
@@ -281,7 +297,15 @@ function setPassword($id, $password) {
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
     $stmt = $mysqli->prepare("UPDATE `users` SET `password`=? WHERE `id`=?");
     $stmt->bind_param('si', $password_hash, $id);
-    $stmt->execute() or die("Error: Failed to save settings.");
+    $stmt->execute() or die("Error: Failed to set password.");
+}
+
+/* set account to verified */
+function setVerified($id, $verified) {
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+    $stmt = $mysqli->prepare("UPDATE `users` SET `verified`=? WHERE `id`=?");
+    $stmt->bind_param('si', $verified, $id);
+    $stmt->execute() or die("Error: Failed to set verified.");
 }
 
 /* send email */
@@ -480,13 +504,14 @@ function getUsersByLanguage($language) { /* [column]*/
     $stmt->execute();
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location, $rank, $icon);
+    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $verified, $description, $languages, $location, $rank, $icon);
     while ($stmt->fetch()) {
         $arr[] = array(
             "id"=>$id,
             "username"=>$username,
             "name"=>$name,
             "banned"=>boolval($banned),
+            "verified"=>boolval($verified),
             "description"=>$description,
             "location"=>$location,
             "languages"=>$languages,
@@ -508,13 +533,14 @@ function getUsers() { /* [column]*/
     $stmt->execute();
 
     $stmt->store_result();
-    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $description, $languages, $location, $rank, $icon);
+    $stmt->bind_result($id, $username, $password, $name, $email, $banned, $verified, $description, $languages, $location, $rank, $icon);
     while ($stmt->fetch()) {
         $arr[] = array(
             "id"=>$id,
             "username"=>$username,
             "name"=>$name,
             "banned"=>boolval($banned),
+            "verified"=>boolval($verified),
             "description"=>$description,
             "location"=>$location,
             "languages"=>$languages,
@@ -595,7 +621,7 @@ function printCSRFToken() {
 
 /* returns a boolean; whether or not the username is taken */
 function usernameExists($username) {
-    $mysqli = getConnection();
+    $mysqli = getConnection();/* [column]*/
     $username = strtolower($username);
     $stmt = $mysqli->prepare("SELECT `id` FROM `users` WHERE lower(`username`)=?");
     $stmt->bind_param('s', $username);
@@ -607,7 +633,7 @@ function usernameExists($username) {
 
 /* checks if the email is taken */
 function emailExists($email) {
-    $email = strtolower($email);
+    $email = strtolower($email);/* [column]*/
     $stmt = getConnection()->prepare("SELECT * FROM `users` WHERE lower(`email`)=?");
     $stmt->bind_param('s', $email);
     $stmt->execute();
