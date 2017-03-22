@@ -19,5 +19,6 @@
         </div>
 
         <?php showSimilar() ?>
+        <?php include "footer.php"; ?>
     </body>
 </html>

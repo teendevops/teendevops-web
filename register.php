@@ -104,5 +104,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                 document.getElementById("username").focus();
             };
         </script>
+        <?php include "footer.php"; ?>
     </body>
 </html>

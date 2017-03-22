@@ -72,5 +72,6 @@
                 document.getElementById("username").focus();
             };
         </script>
+    <?php include "footer.php"; ?>
     </body>
 </html>

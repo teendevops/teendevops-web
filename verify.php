@@ -29,5 +29,6 @@
         echo '<center>You\'re already signed in! <a href="/">Go home</a>.</center>';
     }
 ?>
+        <?php include "footer.php"; ?>
     </body>
 </html>

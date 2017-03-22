@@ -166,5 +166,6 @@
             </div>
             </fieldset>
         </form>
+        <?php include "footer.php"; ?>
     </body>
 </html>
