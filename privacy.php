@@ -3,8 +3,8 @@
 
     <body>
         <div class="container-fluid">
-            <center><h2>teendevops.net Privacy Policy</h2></center>
-            <b>Disclaimer:<b> The privacy policy may change at any time without prior warning or notification. This page will always contain the most updated version, idenitified by the date at the bottom.<br><br>
+            <center><h2>teendevops.net Privacy Policy</h2>
+            <b>Disclaimer:</b> The privacy policy may change at any time without prior warning or notification. This page will always contain the most updated version, idenitified by the date at the bottom.<br><br>
 
             <b>Do we store your information?</b><br>
             We store information about each user, such as usernames, email addresses, and user descriptions. Passwords are hashed and salted using <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a>, and the plaintext version is never stored (except in RAM). Like most websites, we log the traffic on this site for statistical and security reasons. Information collected by logs include the IP address, URL, and time of an HTTP request.<br><br>
@@ -17,7 +17,7 @@
 
             If you have any questions regarding this privacy policy, don't hesitate to contact us at <a href="mailto:info@teendevops.net">info@teendevops.net</a>.<br>
             Last edited on March 21, 2017.
-        </div>
+        </center></div>
 
         <?php include "footer.php"; ?>
     </body>
