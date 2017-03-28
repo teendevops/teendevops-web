@@ -42,7 +42,7 @@ function register($username, $email, $password) { /* [column]*/
     $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `verified`, `description`, `languages`, `location`, `rank`, `icon`) VALUES (NULL, ?, ?, ?, ?, 'false', 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0', '/assets/user-icons/default.png')");
     $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
     $stmt->execute();
-    
+
     try {
         loginAttempt($mysqli, getUserByName($username)['id'], 'reg');
     } catch(Exception $e) {
@@ -249,6 +249,59 @@ function login($username_or_email, $password_real, $skip = false) { /* [column]*
     return 3; // unknown error
 }
 
+/* log api request */
+function logAPI($endpoint) {
+    $ip = $_SERVER['REMOTE_ADDR'];
+    // token parameter below is for if someone is abusing the api, the admins can block something unique about the abuser if they are spoofing the ip.
+    // the admins will periodically delete everything in the token column to save space, as it only has one purpose.
+    $token = (isSignedIn() ? $_SESSION['id'] : (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : base64_encode($_SERVER['HTTP_USER_AGENT'])));
+
+    $params_unencoded = $_REQUEST; // copy array
+    if(array_key_exists('password', $params_unencoded)) // remove sensitive information
+        $params_unencoded['password'] = '[snip]';
+    if(array_key_exists('confirm_password', $params_unencoded))
+        $params_unencoded['confirm_password'] = '[snip]';
+    if(array_key_exists('csrf', $params_unencoded))
+        $params_unencoded['csrf'] = '[snip]';
+    if(array_key_exists('teendevops_session', $params_unencoded))
+        $params_unencoded['teendevops_session'] = '[snip]';
+    $parameters = json_encode($params_unencoded); // encode array
+
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+
+    $stmt = $mysqli->prepare("INSERT INTO `api` (`time`, `endpoint`, `ip`, `parameters`, `token`) VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?)");
+    $stmt->bind_param('ssss', $endpoint, $ip, $parameters, $token);
+    $stmt->execute();
+}
+
+/* check api log for application DOS attempts */
+function checkAPILog($hours=1) { // limit is 600 per hour
+    $ip = $_SERVER['REMOTE_ADDR'];
+
+    $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
+
+    // yes, yes. It looks like sql injection, but $hours will NEVER take user input.
+	$stmt = $mysqli->prepare("SELECT `endpoint` FROM `api` WHERE `time`>(NOW() - INTERVAL " . $hours . " HOUR) AND `ip`=?"); // maybe check if IP is correct? idk
+	$stmt->bind_param ('s', $ip);
+	$stmt->execute();
+	$stmt->store_result();
+
+	if ($stmt->num_rows >= (600 * $hours))
+		return false; // not good, requests going fast
+	return true; // ok, we're good.
+}
+
+/* write unsuccess message to array if app dos */
+function checkAPIRate() {
+    if(!checkAPILog()) {
+        $json = array();
+
+        $json['success'] = false;
+        $json['error'] = 'You have hit the API rate limit. Contact info@teendevops.net to adjust this limit.';
+        dump($json);
+    }
+}
+
 /* generate a cryptographically secure token */
 function generateSecureCrypto($length) {
     return bin2hex(openssl_random_pseudo_bytes($length));
@@ -272,6 +325,7 @@ function generateToken($id, $type) {
     $stmt = $mysqli->prepare("INSERT INTO `tokens` (`id`, `time`, `ip`, `type`, `token`) VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?)") or die("Error: Failed to prepare statement @ reset_token");
     $stmt->bind_param('isis', $id, $_SERVER['REMOTE_ADDR'], $type, $token) or die("Error: Failed to login bind param.");
     $stmt->execute() or die("Error: Failed to save token to database.");
+
     return $token;
 }
 
@@ -759,12 +813,36 @@ function dump($array) {
     if(!gone($_REQUEST['format'])) {
         $type = $_REQUEST['format'];
         if($type == 'dump') {
+            header("Content-Type: text/plain");
             print_r($array); // phpdump
             die();
+        } else if($type == 'xml') {
+            header("Content-Type: application/xml");
+            die(toXML($array));
         }
     }
 
+    header("Content-Type: application/json");
     die(json_encode($array)); // json
+}
+
+/* converts array to xml */
+function toXML($array) {
+    $xml = new SimpleXMLElement("<?xml version=\"1.0\"?><root></root>");
+
+    foreach($array as $key => $value) {
+        if(is_array($value)) {
+            $key = is_numeric($key) ? "item$key" : $key;
+            $subnode = $xml->addChild("$key");
+            array_to_xml($value, $subnode);
+        }
+        else {
+            $key = is_numeric($key) ? "item$key" : $key;
+            $xml->addChild("$key","$value");
+        }
+    }
+
+    return $xml->asXML();
 }
 
 /* Validates session ids */

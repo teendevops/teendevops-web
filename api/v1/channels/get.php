@@ -1,7 +1,8 @@
 <?php
     include "../../../includes/functions.php";
 
-    header("Content-Type: application/json");
+    checkAPIRate();
+    logAPI('channels/get/');
 
     $json = array();
     $json['success'] = false;

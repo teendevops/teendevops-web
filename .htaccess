@@ -1,8 +1,14 @@
+# Enable the rewrite engine
 RewriteEngine On
 
+# Force HTTPS
 RewriteCond %{SERVER_PORT} 80
 RewriteRule ^(.*)$ https://www.teendevops.net/$1 [R,L]
 
+# Block access to /phpmyadmin, if exists
+RewriteRule ^(/phpmyadmin) - [F,L,NC]
+
+# Rewrite url parameters
 RewriteRule ^profile/([^/]+)/?$ /profile.php?username=$1 [L]
 RewriteRule ^profiles/([^/]+)/?$ /profile.php?username=$1 [L]
 RewriteRule ^users/([^/]+)/?$ /profile.php?username=$1 [L]
@@ -14,6 +20,7 @@ RewriteRule ^channel/([^/]+)/?$ /chat.php?channel=$1 [L]
 RewriteCond %{DOCUMENT_ROOT}/$1.php -f
 RewriteRule (.*?)/?$ $1.php [L]
 
+# Enable security headers
 Header set X-Frame-Options DENY
 Header set X-Content-Type-Options "nosniff"
 Header set X-XSS-Protection "1; mode=block"
@@ -21,5 +28,6 @@ Header set Referrer-Policy no-referrer
 Header set X-Easter-Egg "You found an easter egg: e4st3r_egg_5"
 Header set Strict-Transport-Security "max-age=31536000; includeSubdomains" env=HTTPS
 
-# Header always set Public-Key-Pins "pin-sha256=\"VetzveJCgWcgnxPMy9CdWWK7IOwBa/CgNXms6Gmhq6g=\"; max-age=5184000"
-# Header set Content-Security-Policy "default-src 'self' teendevops.net www.teendevops.net;"
+# Disabled security headers...
+#     Header always set Public-Key-Pins "pin-sha256=\"VetzveJCgWcgnxPMy9CdWWK7IOwBa/CgNXms6Gmhq6g=\"; max-age=5184000"
+#     Header set Content-Security-Policy "default-src 'self' teendevops.net www.teendevops.net;"

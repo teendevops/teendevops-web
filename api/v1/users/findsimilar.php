@@ -1,7 +1,8 @@
 <?php
-include "../../../includes/functions.php";
+    include "../../../includes/functions.php";
 
-    header("Content-Type: text/plain");
+    checkAPIRate();
+    logAPI('users/findsimilar/');
 
     $json = array();
     $json['success'] = false;

@@ -1,7 +1,8 @@
 <?php
     include "../../../includes/functions.php";
 
-    header("Content-Type: text/plain");
+    checkAPIRate();
+    logAPI('users/get/');
 
     $json = array();
     $json['success'] = false;
@@ -13,7 +14,7 @@
         else if(!gone($_REQUEST['username']))
             $user = getUserByName($_REQUEST['username'], false);
         else {
-            $json['error'] = 'Either parameter `id` or `username` must be set.';
+            $json['error'] = 'Parameter \'id\' or \'username\' is not set.';
             dump($json);
         }
 

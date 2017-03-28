@@ -1,5 +1,31 @@
 # REST API v1
-teendevops has a REST API on the web for developers to create clients with.
+This file contains the documentation for teendevops' REST API version 1.
+
+## Useful Information
+### Rate Limiting
+The REST API implements rate limiting to prevent spam and abuse. The default rate limit is **600 requests per hour per IP**. Contact info@teendevops.net to adjust this limit.
+
+Attempts to evade this limit will using methods including (but not limited to) the use of proxies or ip spoofing will result in a ban from the use of the REST API.
+
+### Error Handling
+When an error occurs on the server, the variable `success` will be set to `false`. Otherwise, `success` will be set to `true`. The variable `error` will always contain the error message, if any.
+
+Here is a list of the most common contents of `error` and their meanings:
+ - `Request method must be POST.` - This means that the request method POST must be used. GET, PUT, DELETE, or any others are not allowed.
+ - `Parameter '...' is not set.` - This means that the GET or POST parameter `...` is required, and must be set.
+ - `Parameter '...' is not valid.` - This means that the GET or POST parameter `...` is not valid. For example, trying to put a username where the user id belongs won't work.
+ - `Invalid CSRF token.` - This means that the GET or POST parameter `csrf` is either not set, or is not valid. The CSRF token can be obtained by making a GET request to [auth/csrf/](#auth/csrf/).
+
+If you are confused about any of the messages stored in `error`, feel free to shoot an email to info@teendevops.net.
+
+### Output Formatting
+The output format of any of the endpoints can be configured by setting the parameter `format`. The default format is [json](https://www.w3schools.com/js/js_json_intro.asp).
+
+Valid settings for the parameter `format` include:
+ - `json` - [JavaScript Object Notation](https://www.w3schools.com/js/js_json_intro.asp)
+ - `xml` - [Extensible Markup Language](https://www.w3schools.com/xml/)
+ - `dump` - [PHP Array Dump](http://php.net/manual/en/function.print-r.php)
+
 ## Base URL
  - http://teendevops.net/api/v1/
 
