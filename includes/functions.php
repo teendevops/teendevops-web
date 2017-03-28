@@ -42,6 +42,12 @@ function register($username, $email, $password) { /* [column]*/
     $stmt = $mysqli->prepare("INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `banned`, `verified`, `description`, `languages`, `location`, `rank`, `icon`) VALUES (NULL, ?, ?, ?, ?, 'false', 'false', 'Write something about yourself here...', 'None', 'cat location > /dev/null', '0', '/assets/user-icons/default.png')");
     $stmt->bind_param('ssss', $username, $password_hash, $username, $email);
     $stmt->execute();
+    
+    try {
+        loginAttempt($mysqli, getUserByName($username)['id'], 'reg');
+    } catch(Exception $e) {
+        // ignore error
+    }
 }
 
 /* returns an array with information about the given user */
@@ -272,7 +278,7 @@ function generateToken($id, $type) {
 /* checks if a token is valid */
 function validToken($id, $type, $token) {
     $mysqli = getConnection() or die("Error: Failed to get connection to MySQL database.");
-	$stmt = $mysqli->prepare("SELECT * FROM `tokens` WHERE `time`>(NOW() - INTERVAL 5 HOUR) AND `id`=? AND `type`=? AND `token`=?"); // maybe check if IP is correct? idk
+	$stmt = $mysqli->prepare("SELECT * FROM `tokens` WHERE `time`>(NOW() - INTERVAL 12 HOUR) AND `id`=? AND `type`=? AND `token`=?"); // maybe check if IP is correct? idk
 	$stmt->bind_param ('iis', $id, $type, $token);
 	$stmt->execute() or die("Error: Failed to execute reset password query");
 	$stmt->store_result();
