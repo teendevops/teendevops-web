@@ -29,6 +29,5 @@ Header set X-Easter-Egg "You found an easter egg: e4st3r_egg_5"
 Header set Strict-Transport-Security "max-age=31536000; includeSubdomains" env=HTTPS
 Header set Content-Security-Policy "script-src 'self' https://teendevops.net https://*.teendevops.net https:;"
 
-# Disabled security headers...
+# Disabled security headers below...
 #     Header always set Public-Key-Pins "pin-sha256=\"VetzveJCgWcgnxPMy9CdWWK7IOwBa/CgNXms6Gmhq6g=\"; max-age=5184000"
-#     Header set Content-Security-Policy "default-src 'self' teendevops.net www.teendevops.net;"
