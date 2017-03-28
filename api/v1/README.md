@@ -15,6 +15,7 @@ Here is a list of the most common contents of `error` and their meanings:
  - `Parameter '...' is not set.` - This means that the GET or POST parameter `...` is required, and must be set.
  - `Parameter '...' is not valid.` - This means that the GET or POST parameter `...` is not valid. For example, trying to put a username where the user id belongs won't work.
  - `Invalid CSRF token.` - This means that the GET or POST parameter `csrf` is either not set, or is not valid. The CSRF token can be obtained by making a GET request to [auth/csrf/](#auth/csrf/).
+ - `You have hit the API rate limit. Contact info@teendevops.net to adjust this limit.` - This means that you have met the limit of requests per hour. The default is 600, but if you need to adjust that limit, you can contact info@teendevops.net.
 
 If you are confused about any of the messages stored in `error`, feel free to shoot an email to info@teendevops.net.
 
@@ -23,7 +24,7 @@ The output format of any of the endpoints can be configured by setting the param
 
 Valid settings for the parameter `format` include:
  - `json` - [JavaScript Object Notation](https://www.w3schools.com/js/js_json_intro.asp)
- - `xml` - [Extensible Markup Language](https://www.w3schools.com/xml/)
+ - `xml`  - [Extensible Markup Language](https://www.w3schools.com/xml/)
  - `dump` - [PHP Array Dump](http://php.net/manual/en/function.print-r.php)
 
 ## Base URL
