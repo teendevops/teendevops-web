@@ -137,7 +137,8 @@
             var lines = data.split("\n");
             for(var i = 0, len = lines.length; i < len; i++) {
                 var split = lines[i].split("=");
-                replace[split[0]] = split[1];
+                if(split.length == 2 && split[1] !== null)
+                    replace[split[0]] = split[1];
             }
         }
     });
