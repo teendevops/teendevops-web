@@ -1,5 +1,5 @@
 # Status
-[![Build Status](https://travis-ci.org/teendevops/teendevops.net.svg?branch=master)](https://travis-ci.org/teendevops/teendevops.net)
+[![Build Status](https://travis-ci.org/teendevops/teendevops-web.svg?branch=master)](https://travis-ci.org/teendevops/teendevops-web)
 
 # About
 teendevops aims to create an scalable and open-source platform on which teenagers who share similar interests in information technology can connect, communicate, and collaborate with each other.
