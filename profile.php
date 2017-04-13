@@ -23,6 +23,7 @@
                         <h1><a href="/profile/<?php echo htmlspecialchars($user['username']); ?>/"><?php echo htmlspecialchars($user['username']); ?></a></h1>
                         <h2><?php echo htmlspecialchars(getRank($user['rank'])) ?></h2>
                         <h2 class="lang"><?php
+                            if(empty($user['id'])) die('<center><h1>user does not exist</h1></center>');
                             $href = ($user['id'] == $_SESSION['id']);
                             $print = isSignedIn() && ($_SESSION['rank'] != 0 || $href);
 
